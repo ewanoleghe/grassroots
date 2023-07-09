@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Regression-Kriging | MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ</title>
+  <meta name="description" content="Chapter 6 Regression-Kriging | MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Regression-Kriging | MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Regression-Kriging | MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ" />
+  
+  
+  
+
+<meta name="author" content="EWAN OLEGHE" />
+
+
+<meta name="date" content="2023-07-09" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="geo-matching-the-dataset.html"/>
+<link rel="next" href="random-forest.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">NJ SOC MAPPING</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> NJ SOC MAPPING</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#modeling-approach"><i class="fa fa-check"></i><b>2.1</b> Modeling Approach</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#study-area"><i class="fa fa-check"></i><b>2.2</b> Study Area</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction.html"><a href="introduction.html#big-geo-data"><i class="fa fa-check"></i><b>2.3</b> Big Geo Data</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction.html"><a href="introduction.html#calculations"><i class="fa fa-check"></i><b>2.4</b> Calculations</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="soil-data.html"><a href="soil-data.html"><i class="fa fa-check"></i><b>3</b> Soil Data</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="soil-data.html"><a href="soil-data.html#soil-organic-carbon-soc-ground-measurements"><i class="fa fa-check"></i><b>3.1</b> Soil organic carbon (SOC) ground measurements</a></li>
+<li class="chapter" data-level="3.2" data-path="soil-data.html"><a href="soil-data.html#some-libraries"><i class="fa fa-check"></i><b>3.2</b> Some Libraries</a></li>
+<li class="chapter" data-level="3.3" data-path="soil-data.html"><a href="soil-data.html#input-data-in-r"><i class="fa fa-check"></i><b>3.3</b> Input data in R</a></li>
+<li class="chapter" data-level="3.4" data-path="soil-data.html"><a href="soil-data.html#create-the-soc-data"><i class="fa fa-check"></i><b>3.4</b> Create the SOC data</a></li>
+<li class="chapter" data-level="3.5" data-path="soil-data.html"><a href="soil-data.html#working-data"><i class="fa fa-check"></i><b>3.5</b> Working Data</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="co-variates-and-raster-files.html"><a href="co-variates-and-raster-files.html"><i class="fa fa-check"></i><b>4</b> Co-Variates and Raster Files</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="co-variates-and-raster-files.html"><a href="co-variates-and-raster-files.html#chelsa-global-downscaled-climate-data-set"><i class="fa fa-check"></i><b>4.1</b> CHELSA global downscaled climate data set</a></li>
+<li class="chapter" data-level="4.2" data-path="co-variates-and-raster-files.html"><a href="co-variates-and-raster-files.html#covariates-plot"><i class="fa fa-check"></i><b>4.2</b> Covariates plot</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html"><i class="fa fa-check"></i><b>5</b> Geo-matching the Dataset</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html#technical-steps---geo-matching-and-rasterize-in-r"><i class="fa fa-check"></i><b>5.1</b> Technical steps - Geo-matching and Rasterize in R</a></li>
+<li class="chapter" data-level="5.2" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html#step-2---adding-raster-soilmap-to-the-raster-stack"><i class="fa fa-check"></i><b>5.2</b> Step 2 - Adding raster soilmap to the raster stack</a></li>
+<li class="chapter" data-level="5.3" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html#step-3---geo-matching"><i class="fa fa-check"></i><b>5.3</b> Step 3 - Geo-matching</a></li>
+<li class="chapter" data-level="5.4" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html#step-4---rasterize-and-export-the-results-as-geotiff"><i class="fa fa-check"></i><b>5.4</b> Step 4 - Rasterize and export the results as geotiff</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="regression-kriging.html"><a href="regression-kriging.html"><i class="fa fa-check"></i><b>6</b> Regression-Kriging</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="regression-kriging.html"><a href="regression-kriging.html#data-preparation"><i class="fa fa-check"></i><b>6.1</b> Data preparation</a></li>
+<li class="chapter" data-level="6.2" data-path="regression-kriging.html"><a href="regression-kriging.html#regression-model"><i class="fa fa-check"></i><b>6.2</b> Regression Model</a></li>
+<li class="chapter" data-level="6.3" data-path="regression-kriging.html"><a href="regression-kriging.html#stepwise-variable-selection"><i class="fa fa-check"></i><b>6.3</b> stepwise variable selection</a></li>
+<li class="chapter" data-level="6.4" data-path="regression-kriging.html"><a href="regression-kriging.html#model-validation-graphical-diagnosis-of-the-regression-analysis"><i class="fa fa-check"></i><b>6.4</b> Model Validation: graphical diagnosis of the regression analysis</a></li>
+<li class="chapter" data-level="6.5" data-path="regression-kriging.html"><a href="regression-kriging.html#prediction-and-residual-kriging"><i class="fa fa-check"></i><b>6.5</b> Prediction and residual kriging</a></li>
+<li class="chapter" data-level="6.6" data-path="regression-kriging.html"><a href="regression-kriging.html#cross-validation-of-regression-kriging-models"><i class="fa fa-check"></i><b>6.6</b> Cross-validation of regression-kriging models</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="random-forest.html"><a href="random-forest.html"><i class="fa fa-check"></i><b>7</b> Random-Forest</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="random-forest.html"><a href="random-forest.html#modeling-approach-1"><i class="fa fa-check"></i><b>7.1</b> Modeling Approach</a></li>
+<li class="chapter" data-level="7.2" data-path="random-forest.html"><a href="random-forest.html#data-preparation-1"><i class="fa fa-check"></i><b>7.2</b> Data preparation</a></li>
+<li class="chapter" data-level="7.3" data-path="random-forest.html"><a href="random-forest.html#define-a-model-formula"><i class="fa fa-check"></i><b>7.3</b> define a model formula</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="random-forest.html"><a href="random-forest.html#number-of-predictors-used"><i class="fa fa-check"></i><b>7.3.1</b> Number of predictors used</a></li>
+<li class="chapter" data-level="7.3.2" data-path="random-forest.html"><a href="random-forest.html#check-if-the-error-stabilizes"><i class="fa fa-check"></i><b>7.3.2</b> Check if the error stabilizes</a></li>
+<li class="chapter" data-level="7.3.3" data-path="random-forest.html"><a href="random-forest.html#make-a-prediction-across-all-nj"><i class="fa fa-check"></i><b>7.3.3</b> Make a prediction across all NJ</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="random-forest.html"><a href="random-forest.html#using-modified-maps-to-show-the-spatial-distribution-of-the-soc-stocks-across-nj"><i class="fa fa-check"></i><b>7.4</b> Using modified Maps to show the Spatial distribution of the SOC stocks across NJ</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="random-forest.html"><a href="random-forest.html#tmap"><i class="fa fa-check"></i><b>7.4.1</b> tMap</a></li>
+<li class="chapter" data-level="7.4.2" data-path="random-forest.html"><a href="random-forest.html#tmap-view-mode"><i class="fa fa-check"></i><b>7.4.2</b> tMap view mode</a></li>
+<li class="chapter" data-level="7.4.3" data-path="random-forest.html"><a href="random-forest.html#with-the-sampling-location"><i class="fa fa-check"></i><b>7.4.3</b> With the sampling location</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="random-forest.html"><a href="random-forest.html#using-ggplot2"><i class="fa fa-check"></i><b>7.5</b> Using GGPLOT2</a></li>
+<li class="chapter" data-level="7.6" data-path="random-forest.html"><a href="random-forest.html#with-modified-color-pallett"><i class="fa fa-check"></i><b>7.6</b> With modified color pallett</a></li>
+<li class="chapter" data-level="7.7" data-path="random-forest.html"><a href="random-forest.html#using-quantile-regression-forest-to-estimate-uncertainty"><i class="fa fa-check"></i><b>7.7</b> Using quantile regression forest to estimate uncertainty</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="support-vector-machines-model.html"><a href="support-vector-machines-model.html"><i class="fa fa-check"></i><b>8</b> Support Vector Machines Model</a></li>
+<li class="chapter" data-level="9" data-path="model-evaluation.html"><a href="model-evaluation.html"><i class="fa fa-check"></i><b>9</b> Model evaluation</a></li>
+<li class="chapter" data-level="10" data-path="rothc-model.html"><a href="rothc-model.html"><i class="fa fa-check"></i><b>10</b> RothC model</a></li>
+<li class="divider"></li>
+<li><a href="#top">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="regression-kriging" class="section level1 hasAnchor" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Regression-Kriging<a href="regression-kriging.html#regression-kriging" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="data-preparation" class="section level2 hasAnchor" number="6.1">
+<h2><span class="header-section-number">6.1</span> Data preparation<a href="regression-kriging.html#data-preparation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We previously prepared the point dataset “nj.SOC” in chapter 5. We will be using this data file in this section.</p>
+<p>Environmental predictors (covariates).<br>
+In the Chapter 4, we presented and prepared several global and climatic datasets. In addition to these datasets, numerous covariate layers have been prepared</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb1-1"><a href="regression-kriging.html#cb1-1" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="regression-kriging.html#cb1-2" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
+<span id="cb1-3"><a href="regression-kriging.html#cb1-3" tabindex="-1"></a><span class="in"># explore the data structure</span></span>
+<span id="cb1-4"><a href="regression-kriging.html#cb1-4" tabindex="-1"></a><span class="in">nj.SOC &lt;- read.csv(&quot;C/../LOCATION/File_Name.csv&quot;)</span></span>
+<span id="cb1-5"><a href="regression-kriging.html#cb1-5" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="regression-kriging.html#cb1-6" tabindex="-1"></a><span class="in"># Read in covariates</span></span>
+<span id="cb1-7"><a href="regression-kriging.html#cb1-7" tabindex="-1"></a><span class="in">files &lt;- list.files(Directory, pattern = &#39;.tif$&#39;, full.names = TRUE)</span></span>
+<span id="cb1-8"><a href="regression-kriging.html#cb1-8" tabindex="-1"></a><span class="in">covs &lt;- stack(files)</span></span>
+<span id="cb1-9"><a href="regression-kriging.html#cb1-9" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="regression-kriging.html#cb2-1" tabindex="-1"></a><span class="co"># Explore the data structure</span></span>
+<span id="cb2-2"><a href="regression-kriging.html#cb2-2" tabindex="-1"></a><span class="fu">str</span>(nj.SOC)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    188 obs. of  26 variables:
+##  $ X.1                     : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ id                      : chr  &quot;C1201C061&quot; &quot;C1201C062&quot; &quot;C1201C063&quot; &quot;C1201C064&quot; ...
+##  $ X                       : num  -75 -75 -75 -75 -75 ...
+##  $ Y                       : num  41 41 41 41 41 ...
+##  $ SOC                     : num  90 58.4 39.7 67.2 55.3 ...
+##  $ CRFVOL                  : num  9.34 3.97 4.84 6.97 5.97 ...
+##  $ OCSKGM                  : num  4.5 4.07 3.68 4.21 4.01 ...
+##  $ annualPET               : num  1009 1009 1009 1009 1009 ...
+##  $ aridityIndexThornthwaite: num  28.4 28.4 28.4 28.4 28.4 ...
+##  $ climaticMoistureIndex   : num  0.0128 0.0128 0.0128 0.0128 0.0128 ...
+##  $ continentality          : num  25.2 25.2 25.2 25.2 25.2 ...
+##  $ embergerQ               : num  105 105 105 105 105 ...
+##  $ growingDegDays0         : num  5011 5011 5011 5011 5011 ...
+##  $ growingDegDays5         : num  3409 3409 3409 3409 3409 ...
+##  $ maxTempColdest          : num  5.07 5.07 5.07 5.07 5.07 ...
+##  $ meanTempColdest         : num  1.2 1.2 1.2 1.2 1.2 ...
+##  $ meanTempWarmest         : num  26.4 26.4 26.4 26.4 26.4 ...
+##  $ minTempWarmest          : num  21.5 21.5 21.5 21.5 21.5 ...
+##  $ monthCountByTemp10      : int  7 7 7 7 7 7 7 7 7 7 ...
+##  $ PETColdestQuarter       : num  24.9 24.9 24.9 24.9 24.9 ...
+##  $ PETDriestQuarter        : num  36.8 36.8 36.8 36.8 36.8 ...
+##  $ PETseasonality          : num  5257 5257 5257 5257 5257 ...
+##  $ PETWarmestQuarter       : num  151 151 151 151 151 ...
+##  $ PETWettestQuarter       : num  148 148 148 148 148 ...
+##  $ thermicityIndex         : num  238 238 238 238 238 ...
+##  $ optional                : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="regression-kriging.html#cb4-1" tabindex="-1"></a><span class="co"># Promote to spatialPointsDataFrame</span></span>
+<span id="cb4-2"><a href="regression-kriging.html#cb4-2" tabindex="-1"></a><span class="fu">coordinates</span>(nj.SOC) <span class="ot">&lt;-</span> <span class="er">~</span> X <span class="sc">+</span> Y</span>
+<span id="cb4-3"><a href="regression-kriging.html#cb4-3" tabindex="-1"></a><span class="fu">class</span>(nj.SOC)</span></code></pre></div>
+<pre><code>## [1] &quot;SpatialPointsDataFrame&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;sp&quot;</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="regression-kriging.html#cb6-1" tabindex="-1"></a>nj.SOC<span class="sc">@</span>proj4string <span class="ot">&lt;-</span> <span class="fu">CRS</span>(<span class="at">projargs =</span> <span class="st">&quot;+proj=longlat +datum=WGS84&quot;</span>)</span>
+<span id="cb6-2"><a href="regression-kriging.html#cb6-2" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="regression-kriging.html#cb6-3" tabindex="-1"></a><span class="co"># Get the covariates names</span></span>
+<span id="cb6-4"><a href="regression-kriging.html#cb6-4" tabindex="-1"></a><span class="fu">library</span>(raster)</span>
+<span id="cb6-5"><a href="regression-kriging.html#cb6-5" tabindex="-1"></a>covs <span class="ot">&lt;-</span> <span class="fu">stack</span>(files)</span>
+<span id="cb6-6"><a href="regression-kriging.html#cb6-6" tabindex="-1"></a><span class="fu">names</span>(covs)</span></code></pre></div>
+<pre><code>##  [1] &quot;annualPET&quot;                &quot;aridityIndexThornthwaite&quot;
+##  [3] &quot;climaticMoistureIndex&quot;    &quot;continentality&quot;          
+##  [5] &quot;embergerQ&quot;                &quot;growingDegDays0&quot;         
+##  [7] &quot;growingDegDays5&quot;          &quot;maxTempColdest&quot;          
+##  [9] &quot;meanTempColdest&quot;          &quot;meanTempWarmest&quot;         
+## [11] &quot;minTempWarmest&quot;           &quot;monthCountByTemp10&quot;      
+## [13] &quot;PETColdestQuarter&quot;        &quot;PETDriestQuarter&quot;        
+## [15] &quot;PETseasonality&quot;           &quot;PETWarmestQuarter&quot;       
+## [17] &quot;PETWettestQuarter&quot;        &quot;thermicityIndex&quot;</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="regression-kriging.html#cb8-1" tabindex="-1"></a><span class="do">## Converting spatialPointsDataFrame to  Data.frame</span></span>
+<span id="cb8-2"><a href="regression-kriging.html#cb8-2" tabindex="-1"></a>df.njSOC <span class="ot">&lt;-</span> nj.SOC<span class="sc">@</span>data </span>
+<span id="cb8-3"><a href="regression-kriging.html#cb8-3" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="regression-kriging.html#cb8-4" tabindex="-1"></a>df.njSOC <span class="ot">&lt;-</span> df.njSOC[, <span class="fu">c</span>(<span class="st">&quot;OCSKGM&quot;</span>, <span class="fu">names</span>(covs))] </span></code></pre></div>
+</div>
+<div id="regression-model" class="section level2 hasAnchor" number="6.2">
+<h2><span class="header-section-number">6.2</span> Regression Model<a href="regression-kriging.html#regression-model" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="regression-kriging.html#cb9-1" tabindex="-1"></a><span class="co"># Fit a multiple linear regression model between the log transformed Organic C column</span></span>
+<span id="cb9-2"><a href="regression-kriging.html#cb9-2" tabindex="-1"></a>model.MLR <span class="ot">&lt;-</span> <span class="fu">lm</span>(OCSKGM <span class="sc">~</span> ., <span class="at">data =</span> df.njSOC) </span>
+<span id="cb9-3"><a href="regression-kriging.html#cb9-3" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="regression-kriging.html#cb9-4" tabindex="-1"></a><span class="fu">summary</span>(model.MLR)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = OCSKGM ~ ., data = df.njSOC)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2.11649 -0.57886  0.00208  0.66902  1.30325 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                            Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)               3.837e+02  1.015e+03   0.378  0.70593    
+## annualPET                -3.000e-01  1.831e-01  -1.639  0.10316    
+## aridityIndexThornthwaite -4.814e-02  4.468e-02  -1.078  0.28274    
+## climaticMoistureIndex     6.083e+01  1.506e+01   4.040 8.08e-05 ***
+## continentality           -1.573e+01  5.587e+01  -0.282  0.77863    
+## embergerQ                -3.450e-01  8.400e-02  -4.107 6.23e-05 ***
+## growingDegDays0          -1.292e-01  9.024e-02  -1.432  0.15395    
+## growingDegDays5           2.738e-02  2.436e-02   1.124  0.26262    
+## maxTempColdest           -2.336e+00  4.856e+00  -0.481  0.63110    
+## meanTempColdest          -7.621e+00  7.508e+01  -0.102  0.91927    
+## meanTempWarmest                  NA         NA      NA       NA    
+## minTempWarmest            1.087e+01  5.547e+00   1.959  0.05173 .  
+## monthCountByTemp10       -5.568e-02  3.527e-01  -0.158  0.87473    
+## PETColdestQuarter         7.758e+00  3.466e+00   2.238  0.02650 *  
+## PETDriestQuarter          1.282e-02  1.230e-02   1.043  0.29850    
+## PETseasonality            1.308e-01  4.725e-02   2.768  0.00627 ** 
+## PETWarmestQuarter        -3.211e+00  1.507e+00  -2.131  0.03453 *  
+## PETWettestQuarter        -9.291e-04  1.075e-02  -0.086  0.93124    
+## thermicityIndex           1.260e+00  3.299e+00   0.382  0.70291    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.8334 on 170 degrees of freedom
+## Multiple R-squared:  0.3795, Adjusted R-squared:  0.3174 
+## F-statistic: 6.116 on 17 and 170 DF,  p-value: 5.948e-11</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb11-1"><a href="regression-kriging.html#cb11-1" tabindex="-1"></a></span>
+<span id="cb11-2"><a href="regression-kriging.html#cb11-2" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
+<span id="cb11-3"><a href="regression-kriging.html#cb11-3" tabindex="-1"></a><span class="in">### From the summary of our fitted model (model.MLR) above, it seems only a few of the covariates are significant in describing</span></span>
+<span id="cb11-4"><a href="regression-kriging.html#cb11-4" tabindex="-1"></a><span class="in">### the spatial variation of the target variable. To determine the most predictive model we can run a stepwise regression using   </span></span>
+<span id="cb11-5"><a href="regression-kriging.html#cb11-5" tabindex="-1"></a><span class="in">### the step() function. With this function, we can also specify the mode of stepwise search, can be one of both, backward, or foreward.  </span></span>
+<span id="cb11-6"><a href="regression-kriging.html#cb11-6" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+</div>
+<div id="stepwise-variable-selection" class="section level2 hasAnchor" number="6.3">
+<h2><span class="header-section-number">6.3</span> stepwise variable selection<a href="regression-kriging.html#stepwise-variable-selection" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="regression-kriging.html#cb12-1" tabindex="-1"></a><span class="co"># Removes all Covs not contributing to the model</span></span>
+<span id="cb12-2"><a href="regression-kriging.html#cb12-2" tabindex="-1"></a>model.MLR.step <span class="ot">&lt;-</span> <span class="fu">step</span>(model.MLR, <span class="at">direction=</span><span class="st">&quot;both&quot;</span>)</span></code></pre></div>
+<pre><code>## Start:  AIC=-51.45
+## OCSKGM ~ annualPET + aridityIndexThornthwaite + climaticMoistureIndex + 
+##     continentality + embergerQ + growingDegDays0 + growingDegDays5 + 
+##     maxTempColdest + meanTempColdest + meanTempWarmest + minTempWarmest + 
+##     monthCountByTemp10 + PETColdestQuarter + PETDriestQuarter + 
+##     PETseasonality + PETWarmestQuarter + PETWettestQuarter + 
+##     thermicityIndex
+## 
+## 
+## Step:  AIC=-51.45
+## OCSKGM ~ annualPET + aridityIndexThornthwaite + climaticMoistureIndex + 
+##     continentality + embergerQ + growingDegDays0 + growingDegDays5 + 
+##     maxTempColdest + meanTempColdest + minTempWarmest + monthCountByTemp10 + 
+##     PETColdestQuarter + PETDriestQuarter + PETseasonality + PETWarmestQuarter + 
+##     PETWettestQuarter + thermicityIndex
+## 
+##                            Df Sum of Sq    RSS     AIC
+## - PETWettestQuarter         1    0.0052 118.08 -53.444
+## - meanTempColdest           1    0.0072 118.08 -53.440
+## - monthCountByTemp10        1    0.0173 118.09 -53.424
+## - continentality            1    0.0551 118.12 -53.364
+## - thermicityIndex           1    0.1014 118.17 -53.290
+## - maxTempColdest            1    0.1607 118.23 -53.196
+## - PETDriestQuarter          1    0.7553 118.83 -52.253
+## - aridityIndexThornthwaite  1    0.8065 118.88 -52.172
+## - growingDegDays5           1    0.8774 118.95 -52.060
+## &lt;none&gt;                                  118.07 -51.452
+## - growingDegDays0           1    1.4244 119.49 -51.197
+## - annualPET                 1    1.8647 119.93 -50.506
+## - minTempWarmest            1    2.6659 120.73 -49.254
+## - PETWarmestQuarter         1    3.1538 121.22 -48.496
+## - PETColdestQuarter         1    3.4795 121.55 -47.992
+## - PETseasonality            1    5.3203 123.39 -45.166
+## - climaticMoistureIndex     1   11.3357 129.41 -36.217
+## - embergerQ                 1   11.7123 129.78 -35.671
+## 
+## Step:  AIC=-53.44
+## OCSKGM ~ annualPET + aridityIndexThornthwaite + climaticMoistureIndex + 
+##     continentality + embergerQ + growingDegDays0 + growingDegDays5 + 
+##     maxTempColdest + meanTempColdest + minTempWarmest + monthCountByTemp10 + 
+##     PETColdestQuarter + PETDriestQuarter + PETseasonality + PETWarmestQuarter + 
+##     thermicityIndex
+## 
+##                            Df Sum of Sq    RSS     AIC
+## - meanTempColdest           1    0.0100 118.08 -55.428
+## - monthCountByTemp10        1    0.0153 118.09 -55.419
+## - continentality            1    0.0633 118.14 -55.343
+## - thermicityIndex           1    0.1129 118.19 -55.264
+## - maxTempColdest            1    0.1682 118.24 -55.176
+## - PETDriestQuarter          1    0.7613 118.84 -54.235
+## - aridityIndexThornthwaite  1    0.8933 118.97 -54.027
+## - growingDegDays5           1    0.9277 119.00 -53.972
+## &lt;none&gt;                                  118.08 -53.444
+## - growingDegDays0           1    1.4860 119.56 -53.092
+## - annualPET                 1    1.8620 119.94 -52.502
+## + PETWettestQuarter         1    0.0052 118.07 -51.452
+## - minTempWarmest            1    2.6646 120.74 -51.248
+## - PETWarmestQuarter         1    3.2258 121.30 -50.376
+## - PETColdestQuarter         1    3.4854 121.56 -49.974
+## - PETseasonality            1    5.3806 123.45 -47.066
+## - climaticMoistureIndex     1   11.4877 129.56 -37.989
+## - embergerQ                 1   11.7715 129.85 -37.577
+## 
+## Step:  AIC=-55.43
+## OCSKGM ~ annualPET + aridityIndexThornthwaite + climaticMoistureIndex + 
+##     continentality + embergerQ + growingDegDays0 + growingDegDays5 + 
+##     maxTempColdest + minTempWarmest + monthCountByTemp10 + PETColdestQuarter + 
+##     PETDriestQuarter + PETseasonality + PETWarmestQuarter + thermicityIndex
+## 
+##                            Df Sum of Sq    RSS     AIC
+## - monthCountByTemp10        1    0.0259 118.11 -57.386
+## - maxTempColdest            1    0.1789 118.26 -57.143
+## - PETDriestQuarter          1    0.8219 118.91 -56.124
+## - growingDegDays5           1    0.9358 119.02 -55.944
+## &lt;none&gt;                                  118.08 -55.428
+## - aridityIndexThornthwaite  1    1.3911 119.48 -55.226
+## - thermicityIndex           1    1.9099 120.00 -54.411
+## - annualPET                 1    2.1336 120.22 -54.061
+## + meanTempWarmest           1    0.0102 118.07 -53.444
+## + meanTempColdest           1    0.0100 118.08 -53.444
+## + PETWettestQuarter         1    0.0080 118.08 -53.440
+## - continentality            1    2.9664 121.05 -52.763
+## - PETWarmestQuarter         1    3.2463 121.33 -52.329
+## - minTempWarmest            1    3.5947 121.68 -51.790
+## - PETColdestQuarter         1    4.3626 122.45 -50.607
+## - growingDegDays0           1    5.3256 123.41 -49.134
+## - PETseasonality            1    6.1650 124.25 -47.860
+## - embergerQ                 1   15.9605 134.04 -33.594
+## - climaticMoistureIndex     1   16.1546 134.24 -33.322
+## 
+## Step:  AIC=-57.39
+## OCSKGM ~ annualPET + aridityIndexThornthwaite + climaticMoistureIndex + 
+##     continentality + embergerQ + growingDegDays0 + growingDegDays5 + 
+##     maxTempColdest + minTempWarmest + PETColdestQuarter + PETDriestQuarter + 
+##     PETseasonality + PETWarmestQuarter + thermicityIndex
+## 
+##                            Df Sum of Sq    RSS     AIC
+## - maxTempColdest            1    0.1895 118.30 -59.085
+## - PETDriestQuarter          1    0.8719 118.98 -58.003
+## - growingDegDays5           1    0.9146 119.03 -57.936
+## &lt;none&gt;                                  118.11 -57.386
+## - aridityIndexThornthwaite  1    1.4285 119.54 -57.126
+## - thermicityIndex           1    1.9696 120.08 -56.277
+## - annualPET                 1    2.1676 120.28 -55.967
+## + monthCountByTemp10        1    0.0259 118.08 -55.428
+## + meanTempWarmest           1    0.0209 118.09 -55.420
+## + meanTempColdest           1    0.0207 118.09 -55.419
+## + PETWettestQuarter         1    0.0061 118.10 -55.396
+## - continentality            1    2.9760 121.09 -54.708
+## - PETWarmestQuarter         1    3.4228 121.53 -54.016
+## - minTempWarmest            1    3.7489 121.86 -53.512
+## - PETColdestQuarter         1    4.4139 122.52 -52.489
+## - growingDegDays0           1    5.2999 123.41 -51.134
+## - PETseasonality            1    6.1502 124.26 -49.843
+## - embergerQ                 1   16.1772 134.29 -35.254
+## - climaticMoistureIndex     1   16.2961 134.41 -35.088
+## 
+## Step:  AIC=-59.08
+## OCSKGM ~ annualPET + aridityIndexThornthwaite + climaticMoistureIndex + 
+##     continentality + embergerQ + growingDegDays0 + growingDegDays5 + 
+##     minTempWarmest + PETColdestQuarter + PETDriestQuarter + PETseasonality + 
+##     PETWarmestQuarter + thermicityIndex
+## 
+##                            Df Sum of Sq    RSS     AIC
+## - growingDegDays5           1    0.8067 119.11 -59.807
+## - PETDriestQuarter          1    0.9946 119.30 -59.511
+## &lt;none&gt;                                  118.30 -59.085
+## - aridityIndexThornthwaite  1    1.6688 119.97 -58.451
+## - thermicityIndex           1    1.8634 120.16 -58.147
+## + maxTempColdest            1    0.1895 118.11 -57.386
+## - annualPET                 1    2.4058 120.71 -57.300
+## + meanTempWarmest           1    0.0385 118.26 -57.146
+## + meanTempColdest           1    0.0382 118.26 -57.146
+## + monthCountByTemp10        1    0.0365 118.26 -57.143
+## + PETWettestQuarter         1    0.0122 118.29 -57.104
+## - PETWarmestQuarter         1    3.2530 121.55 -55.985
+## - continentality            1    3.5529 121.85 -55.522
+## - minTempWarmest            1    3.8799 122.18 -55.018
+## - PETColdestQuarter         1    4.3766 122.68 -54.255
+## - growingDegDays0           1    5.1883 123.49 -53.016
+## - PETseasonality            1    5.9946 124.30 -51.792
+## - embergerQ                 1   17.1037 135.40 -35.698
+## - climaticMoistureIndex     1   17.8049 136.10 -34.727
+## 
+## Step:  AIC=-59.81
+## OCSKGM ~ annualPET + aridityIndexThornthwaite + climaticMoistureIndex + 
+##     continentality + embergerQ + growingDegDays0 + minTempWarmest + 
+##     PETColdestQuarter + PETDriestQuarter + PETseasonality + PETWarmestQuarter + 
+##     thermicityIndex
+## 
+##                            Df Sum of Sq    RSS     AIC
+## &lt;none&gt;                                  119.11 -59.807
+## - thermicityIndex           1    1.4518 120.56 -59.530
+## + growingDegDays5           1    0.8067 118.30 -59.085
+## - PETDriestQuarter          1    1.7524 120.86 -59.061
+## - aridityIndexThornthwaite  1    1.9691 121.08 -58.725
+## + maxTempColdest            1    0.0815 119.03 -57.936
+## - annualPET                 1    2.4902 121.60 -57.917
+## + monthCountByTemp10        1    0.0088 119.10 -57.821
+## + PETWettestQuarter         1    0.0038 119.10 -57.813
+## + meanTempColdest           1    0.0035 119.10 -57.813
+## + meanTempWarmest           1    0.0034 119.10 -57.813
+## - continentality            1    2.9749 122.08 -57.169
+## - PETWarmestQuarter         1    3.2750 122.38 -56.708
+## - minTempWarmest            1    3.7722 122.88 -55.946
+## - growingDegDays0           1    4.6166 123.72 -54.658
+## - PETColdestQuarter         1    5.6741 124.78 -53.058
+## - PETseasonality            1    5.7587 124.86 -52.931
+## - embergerQ                 1   17.1172 136.22 -36.563
+## - climaticMoistureIndex     1   17.2417 136.35 -36.391</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="regression-kriging.html#cb14-1" tabindex="-1"></a><span class="co"># summary of the new model using stepwise covariates</span></span>
+<span id="cb14-2"><a href="regression-kriging.html#cb14-2" tabindex="-1"></a><span class="do">#### R-squared =  the percentage of variation in the response that is explained by the model</span></span>
+<span id="cb14-3"><a href="regression-kriging.html#cb14-3" tabindex="-1"></a><span class="fu">summary</span>(model.MLR.step)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = OCSKGM ~ annualPET + aridityIndexThornthwaite + 
+##     climaticMoistureIndex + continentality + embergerQ + growingDegDays0 + 
+##     minTempWarmest + PETColdestQuarter + PETDriestQuarter + PETseasonality + 
+##     PETWarmestQuarter + thermicityIndex, data = df.njSOC)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.1274 -0.5679  0.0166  0.6670  1.2877 
+## 
+## Coefficients:
+##                           Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)              162.16491  121.44143   1.335  0.18350    
+## annualPET                 -0.29871    0.15617  -1.913  0.05741 .  
+## aridityIndexThornthwaite  -0.05716    0.03360  -1.701  0.09073 .  
+## climaticMoistureIndex     55.84604   11.09561   5.033 1.19e-06 ***
+## continentality            -5.74454    2.74770  -2.091  0.03800 *  
+## embergerQ                 -0.32494    0.06479  -5.015 1.29e-06 ***
+## growingDegDays0           -0.08812    0.03383  -2.604  0.00999 ** 
+## minTempWarmest            10.19720    4.33144   2.354  0.01967 *  
+## PETColdestQuarter          8.14227    2.81998   2.887  0.00438 ** 
+## PETDriestQuarter           0.01767    0.01101   1.605  0.11038    
+## PETseasonality             0.12364    0.04251   2.909  0.00410 ** 
+## PETWarmestQuarter         -3.13203    1.42780  -2.194  0.02958 *  
+## thermicityIndex            0.68525    0.46919   1.460  0.14595    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.825 on 175 degrees of freedom
+## Multiple R-squared:  0.374,  Adjusted R-squared:  0.3311 
+## F-statistic: 8.714 on 12 and 175 DF,  p-value: 6.435e-13</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="regression-kriging.html#cb16-1" tabindex="-1"></a><span class="co"># anova of the new model using stepwise covariates</span></span>
+<span id="cb16-2"><a href="regression-kriging.html#cb16-2" tabindex="-1"></a><span class="fu">anova</span>(model.MLR.step)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: OCSKGM
+##                           Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+## annualPET                  1   9.886  9.8857 14.5247 0.0001914 ***
+## aridityIndexThornthwaite   1   7.852  7.8519 11.5365 0.0008446 ***
+## climaticMoistureIndex      1   0.532  0.5319  0.7815 0.3778988    
+## continentality             1   2.516  2.5159  3.6965 0.0561517 .  
+## embergerQ                  1  14.322 14.3216 21.0423 8.535e-06 ***
+## growingDegDays0            1   4.863  4.8629  7.1450 0.0082284 ** 
+## minTempWarmest             1   9.643  9.6430 14.1681 0.0002280 ***
+## PETColdestQuarter          1   6.799  6.7987  9.9891 0.0018559 ** 
+## PETDriestQuarter           1   0.003  0.0033  0.0049 0.9442051    
+## PETseasonality             1   7.695  7.6947 11.3055 0.0009491 ***
+## PETWarmestQuarter          1   5.610  5.6097  8.2421 0.0045983 ** 
+## thermicityIndex            1   1.452  1.4518  2.1330 0.1459499    
+## Residuals                175 119.107  0.6806                      
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="regression-kriging.html#cb18-1" tabindex="-1"></a><span class="co"># *p-value =   To determine whether the association between the dependent and each predictor in the model is statistically significant</span></span></code></pre></div>
+</div>
+<div id="model-validation-graphical-diagnosis-of-the-regression-analysis" class="section level2 hasAnchor" number="6.4">
+<h2><span class="header-section-number">6.4</span> Model Validation: graphical diagnosis of the regression analysis<a href="regression-kriging.html#model-validation-graphical-diagnosis-of-the-regression-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="residuals" class="section level4 hasAnchor" number="6.4.0.1">
+<h4><span class="header-section-number">6.4.0.1</span> # 1. Residuals<a href="regression-kriging.html#residuals" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="regression-kriging.html#cb19-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>))</span>
+<span id="cb19-2"><a href="regression-kriging.html#cb19-2" tabindex="-1"></a><span class="fu">plot</span>(model.MLR.step)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="regression-kriging.html#cb20-1" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span></code></pre></div>
+</div>
+<div id="collinearity-test-using-variance-inflation-factors" class="section level4 hasAnchor" number="6.4.0.2">
+<h4><span class="header-section-number">6.4.0.2</span> # 2 collinearity test using variance inflation factors<a href="regression-kriging.html#collinearity-test-using-variance-inflation-factors" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="regression-kriging.html#cb21-1" tabindex="-1"></a><span class="fu">vif</span>(model.MLR.step)</span></code></pre></div>
+<pre><code>##                annualPET aridityIndexThornthwaite    climaticMoistureIndex 
+##             3.351686e+04             5.754784e+00             1.690369e+02 
+##           continentality                embergerQ          growingDegDays0 
+##             1.783024e+03             1.249914e+02             2.920590e+04 
+##           minTempWarmest        PETColdestQuarter         PETDriestQuarter 
+##             6.608803e+03             2.787411e+03             5.913802e+00 
+##           PETseasonality        PETWarmestQuarter          thermicityIndex 
+##             1.542816e+05             9.423751e+04             3.230792e+04</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="regression-kriging.html#cb23-1" tabindex="-1"></a><span class="co"># Problematic covariates should have sqrt (VIF) &gt; 2</span></span>
+<span id="cb23-2"><a href="regression-kriging.html#cb23-2" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">vif</span>(model.MLR.step))</span></code></pre></div>
+<pre><code>##                annualPET aridityIndexThornthwaite    climaticMoistureIndex 
+##               183.076112                 2.398913                13.001418 
+##           continentality                embergerQ          growingDegDays0 
+##                42.225864                11.179955               170.897342 
+##           minTempWarmest        PETColdestQuarter         PETDriestQuarter 
+##                81.294548                52.795935                 2.431831 
+##           PETseasonality        PETWarmestQuarter          thermicityIndex 
+##               392.786982               306.981290               179.744053</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="regression-kriging.html#cb25-1" tabindex="-1"></a><span class="co"># Removing PETseasonality from the stepwise model</span></span>
+<span id="cb25-2"><a href="regression-kriging.html#cb25-2" tabindex="-1"></a>model.MLR.step <span class="ot">&lt;-</span> <span class="fu">update</span>(model.MLR.step, . <span class="sc">~</span> . <span class="sc">-</span> PETseasonality)</span>
+<span id="cb25-3"><a href="regression-kriging.html#cb25-3" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="regression-kriging.html#cb25-4" tabindex="-1"></a><span class="co"># Test the vif again</span></span>
+<span id="cb25-5"><a href="regression-kriging.html#cb25-5" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">vif</span>(model.MLR.step))</span></code></pre></div>
+<pre><code>##                annualPET aridityIndexThornthwaite    climaticMoistureIndex 
+##               170.590749                 2.398483                12.980826 
+##           continentality                embergerQ          growingDegDays0 
+##                35.403687                11.158751               160.965534 
+##           minTempWarmest        PETColdestQuarter         PETDriestQuarter 
+##                68.470182                38.647413                 2.421617 
+##        PETWarmestQuarter          thermicityIndex 
+##               131.611264               158.734649</code></pre>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="regression-kriging.html#cb27-1" tabindex="-1"></a><span class="co"># Summary of the new model using stepwise covariates selection</span></span>
+<span id="cb27-2"><a href="regression-kriging.html#cb27-2" tabindex="-1"></a><span class="fu">summary</span>(model.MLR.step)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = OCSKGM ~ annualPET + aridityIndexThornthwaite + 
+##     climaticMoistureIndex + continentality + embergerQ + growingDegDays0 + 
+##     minTempWarmest + PETColdestQuarter + PETDriestQuarter + PETWarmestQuarter + 
+##     thermicityIndex, data = df.njSOC)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.2260 -0.5354  0.0597  0.7071  1.3150 
+## 
+## Coefficients:
+##                           Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)              269.69900  118.10430   2.284 0.023592 *  
+## annualPET                 -0.13383    0.14857  -0.901 0.368918    
+## aridityIndexThornthwaite  -0.05531    0.03430  -1.612 0.108684    
+## climaticMoistureIndex     57.66183   11.31041   5.098 8.80e-07 ***
+## continentality            -1.38861    2.35210  -0.590 0.555698    
+## embergerQ                 -0.33654    0.06603  -5.097 8.85e-07 ***
+## growingDegDays0           -0.12118    0.03254  -3.724 0.000263 ***
+## minTempWarmest             3.40504    3.72467   0.914 0.361871    
+## PETColdestQuarter          2.55382    2.10757   1.212 0.227237    
+## PETDriestQuarter           0.02060    0.01119   1.840 0.067420 .  
+## PETWarmestQuarter          0.62009    0.62498   0.992 0.322467    
+## thermicityIndex            1.32555    0.42304   3.133 0.002025 ** 
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.8423 on 176 degrees of freedom
+## Multiple R-squared:  0.3438, Adjusted R-squared:  0.3028 
+## F-statistic: 8.382 on 11 and 176 DF,  p-value: 8.878e-12</code></pre>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="regression-kriging.html#cb29-1" tabindex="-1"></a><span class="co"># Outlier test using the Bonferroni test</span></span>
+<span id="cb29-2"><a href="regression-kriging.html#cb29-2" tabindex="-1"></a><span class="fu">outlierTest</span>(model.MLR.step)</span></code></pre></div>
+<pre><code>## No Studentized residuals with Bonferroni p &lt; 0.05
+## Largest |rstudent|:
+##      rstudent unadjusted p-value Bonferroni p
+## 161 -2.784766          0.0059465           NA</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="regression-kriging.html#cb31-1" tabindex="-1"></a><span class="co"># Outlier test using the Bonferroni test</span></span>
+<span id="cb31-2"><a href="regression-kriging.html#cb31-2" tabindex="-1"></a><span class="fu">outlierTest</span>(model.MLR.step)</span></code></pre></div>
+<pre><code>## No Studentized residuals with Bonferroni p &lt; 0.05
+## Largest |rstudent|:
+##      rstudent unadjusted p-value Bonferroni p
+## 161 -2.784766          0.0059465           NA</code></pre>
+</div>
+</div>
+<div id="prediction-and-residual-kriging" class="section level2 hasAnchor" number="6.5">
+<h2><span class="header-section-number">6.5</span> Prediction and residual kriging<a href="regression-kriging.html#prediction-and-residual-kriging" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="regression-kriging.html#cb33-1" tabindex="-1"></a><span class="fu">coordinates</span>(nj.SOC) <span class="ot">&lt;-</span> <span class="er">~</span> X <span class="sc">+</span> Y</span>
+<span id="cb33-2"><a href="regression-kriging.html#cb33-2" tabindex="-1"></a><span class="co"># Project point data</span></span>
+<span id="cb33-3"><a href="regression-kriging.html#cb33-3" tabindex="-1"></a>nj.SOC<span class="sc">@</span>proj4string <span class="ot">&lt;-</span> <span class="fu">CRS</span>(<span class="at">projargs =</span> <span class="st">&quot;+init=epsg:3424&quot;</span>)</span>
+<span id="cb33-4"><a href="regression-kriging.html#cb33-4" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="regression-kriging.html#cb33-5" tabindex="-1"></a><span class="co"># Project covariates to WGS84</span></span>
+<span id="cb33-6"><a href="regression-kriging.html#cb33-6" tabindex="-1"></a>covs <span class="ot">&lt;-</span> <span class="fu">projectRaster</span>(covs, <span class="at">crs =</span> <span class="fu">CRS</span>(<span class="st">&quot;+init=epsg:3424&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="regression-kriging.html#cb34-1" tabindex="-1"></a><span class="co"># Promote covariates to spatial grid dataframe.</span></span>
+<span id="cb34-2"><a href="regression-kriging.html#cb34-2" tabindex="-1"></a>covs.sp <span class="ot">&lt;-</span> <span class="fu">as</span>(covs, <span class="st">&quot;SpatialGridDataFrame&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb35-1"><a href="regression-kriging.html#cb35-1" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
+<span id="cb35-2"><a href="regression-kriging.html#cb35-2" tabindex="-1"></a><span class="in"># RK model</span></span>
+<span id="cb35-3"><a href="regression-kriging.html#cb35-3" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="regression-kriging.html#cb35-4" tabindex="-1"></a><span class="in"># Run regression-kriging prediction.</span></span>
+<span id="cb35-5"><a href="regression-kriging.html#cb35-5" tabindex="-1"></a><span class="in"># This step can take hours!</span></span>
+<span id="cb35-6"><a href="regression-kriging.html#cb35-6" tabindex="-1"></a><span class="in">OCS.krige &lt;- autoKrige(formula =</span></span>
+<span id="cb35-7"><a href="regression-kriging.html#cb35-7" tabindex="-1"></a><span class="in">                         as.formula(model.MLR.step$call$formula),</span></span>
+<span id="cb35-8"><a href="regression-kriging.html#cb35-8" tabindex="-1"></a><span class="in">                       input_data = nj.SOC,</span></span>
+<span id="cb35-9"><a href="regression-kriging.html#cb35-9" tabindex="-1"></a><span class="in">                       new_data = covs.sp,</span></span>
+<span id="cb35-10"><a href="regression-kriging.html#cb35-10" tabindex="-1"></a><span class="in">                       verbose = TRUE,</span></span>
+<span id="cb35-11"><a href="regression-kriging.html#cb35-11" tabindex="-1"></a><span class="in">                       block = c(1000, 1000))  </span></span>
+<span id="cb35-12"><a href="regression-kriging.html#cb35-12" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="regression-kriging.html#cb36-1" tabindex="-1"></a><span class="co"># Convert prediction and standard deviation to rasters and back-tansform the vlaues</span></span>
+<span id="cb36-2"><a href="regression-kriging.html#cb36-2" tabindex="-1"></a>RKprediction <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">raster</span>(OCS.krige<span class="sc">$</span>krige_output[<span class="dv">1</span>]))</span>
+<span id="cb36-3"><a href="regression-kriging.html#cb36-3" tabindex="-1"></a>RKpredsd <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">raster</span>(OCS.krige<span class="sc">$</span>krige_output[<span class="dv">3</span>]))</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="regression-kriging.html#cb37-1" tabindex="-1"></a><span class="fu">plot</span>(RKprediction)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-22-1.png" width="672" />
+SOC prediction of NJ RCAP using a regression kriging model</p>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="regression-kriging.html#cb38-1" tabindex="-1"></a><span class="fu">plot</span>(RKpredsd)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-23-1.png" width="672" />
+Standard deviation map of the regression-kriging model</p>
+</div>
+<div id="cross-validation-of-regression-kriging-models" class="section level2 hasAnchor" number="6.6">
+<h2><span class="header-section-number">6.6</span> Cross-validation of regression-kriging models<a href="regression-kriging.html#cross-validation-of-regression-kriging-models" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>we will apply 10 fold cross-validation to our RK model.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="regression-kriging.html#cb39-1" tabindex="-1"></a><span class="co"># autoKrige.cv() does not removes the duplicated points</span></span>
+<span id="cb39-2"><a href="regression-kriging.html#cb39-2" tabindex="-1"></a><span class="co"># We have to do it manually before running the cross-validation</span></span>
+<span id="cb39-3"><a href="regression-kriging.html#cb39-3" tabindex="-1"></a>nj.SOC <span class="ot">=</span> nj.SOC[<span class="fu">which</span>(<span class="sc">!</span><span class="fu">duplicated</span>(nj.SOC<span class="sc">@</span>coords)), ]</span>
+<span id="cb39-4"><a href="regression-kriging.html#cb39-4" tabindex="-1"></a></span>
+<span id="cb39-5"><a href="regression-kriging.html#cb39-5" tabindex="-1"></a>OCS.krige.cv <span class="ot">&lt;-</span> <span class="fu">autoKrige.cv</span>(<span class="at">formula =</span> </span>
+<span id="cb39-6"><a href="regression-kriging.html#cb39-6" tabindex="-1"></a>                            <span class="fu">as.formula</span>(model.MLR.step<span class="sc">$</span>call<span class="sc">$</span>formula), </span>
+<span id="cb39-7"><a href="regression-kriging.html#cb39-7" tabindex="-1"></a>                            <span class="at">input_data =</span> nj.SOC, <span class="at">nfold =</span> <span class="dv">10</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="regression-kriging.html#cb40-1" tabindex="-1"></a><span class="fu">summary</span>(OCS.krige.cv)</span></code></pre></div>
+<pre><code>##             [,1]    
+## mean_error  0.05008 
+## me_mean     0.008716
+## MAE         0.8521  
+## MSE         1.162   
+## MSNE        0.8267  
+## cor_obspred 0.3225  
+## cor_predres -0.558  
+## RMSE        1.078   
+## RMSE_sd     1.127   
+## URMSE       1.077   
+## iqr         1.263</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="geo-matching-the-dataset.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="random-forest.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/edit/main/06-Regression-Kriging.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/blob/main/06-Regression-Kriging.Rmd",
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

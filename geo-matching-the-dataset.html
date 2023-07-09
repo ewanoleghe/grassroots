@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Geo-matching the Dataset | MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ</title>
+  <meta name="description" content="Chapter 5 Geo-matching the Dataset | MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 5 Geo-matching the Dataset | MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 5 Geo-matching the Dataset | MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ" />
+  
+  
+  
+
+<meta name="author" content="EWAN OLEGHE" />
+
+
+<meta name="date" content="2023-07-09" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="co-variates-and-raster-files.html"/>
+<link rel="next" href="regression-kriging.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">NJ SOC MAPPING</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> NJ SOC MAPPING</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#modeling-approach"><i class="fa fa-check"></i><b>2.1</b> Modeling Approach</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#study-area"><i class="fa fa-check"></i><b>2.2</b> Study Area</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction.html"><a href="introduction.html#big-geo-data"><i class="fa fa-check"></i><b>2.3</b> Big Geo Data</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction.html"><a href="introduction.html#calculations"><i class="fa fa-check"></i><b>2.4</b> Calculations</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="soil-data.html"><a href="soil-data.html"><i class="fa fa-check"></i><b>3</b> Soil Data</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="soil-data.html"><a href="soil-data.html#soil-organic-carbon-soc-ground-measurements"><i class="fa fa-check"></i><b>3.1</b> Soil organic carbon (SOC) ground measurements</a></li>
+<li class="chapter" data-level="3.2" data-path="soil-data.html"><a href="soil-data.html#some-libraries"><i class="fa fa-check"></i><b>3.2</b> Some Libraries</a></li>
+<li class="chapter" data-level="3.3" data-path="soil-data.html"><a href="soil-data.html#input-data-in-r"><i class="fa fa-check"></i><b>3.3</b> Input data in R</a></li>
+<li class="chapter" data-level="3.4" data-path="soil-data.html"><a href="soil-data.html#create-the-soc-data"><i class="fa fa-check"></i><b>3.4</b> Create the SOC data</a></li>
+<li class="chapter" data-level="3.5" data-path="soil-data.html"><a href="soil-data.html#working-data"><i class="fa fa-check"></i><b>3.5</b> Working Data</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="co-variates-and-raster-files.html"><a href="co-variates-and-raster-files.html"><i class="fa fa-check"></i><b>4</b> Co-Variates and Raster Files</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="co-variates-and-raster-files.html"><a href="co-variates-and-raster-files.html#chelsa-global-downscaled-climate-data-set"><i class="fa fa-check"></i><b>4.1</b> CHELSA global downscaled climate data set</a></li>
+<li class="chapter" data-level="4.2" data-path="co-variates-and-raster-files.html"><a href="co-variates-and-raster-files.html#covariates-plot"><i class="fa fa-check"></i><b>4.2</b> Covariates plot</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html"><i class="fa fa-check"></i><b>5</b> Geo-matching the Dataset</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html#technical-steps---geo-matching-and-rasterize-in-r"><i class="fa fa-check"></i><b>5.1</b> Technical steps - Geo-matching and Rasterize in R</a></li>
+<li class="chapter" data-level="5.2" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html#step-2---adding-raster-soilmap-to-the-raster-stack"><i class="fa fa-check"></i><b>5.2</b> Step 2 - Adding raster soilmap to the raster stack</a></li>
+<li class="chapter" data-level="5.3" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html#step-3---geo-matching"><i class="fa fa-check"></i><b>5.3</b> Step 3 - Geo-matching</a></li>
+<li class="chapter" data-level="5.4" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html#step-4---rasterize-and-export-the-results-as-geotiff"><i class="fa fa-check"></i><b>5.4</b> Step 4 - Rasterize and export the results as geotiff</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="regression-kriging.html"><a href="regression-kriging.html"><i class="fa fa-check"></i><b>6</b> Regression-Kriging</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="regression-kriging.html"><a href="regression-kriging.html#data-preparation"><i class="fa fa-check"></i><b>6.1</b> Data preparation</a></li>
+<li class="chapter" data-level="6.2" data-path="regression-kriging.html"><a href="regression-kriging.html#regression-model"><i class="fa fa-check"></i><b>6.2</b> Regression Model</a></li>
+<li class="chapter" data-level="6.3" data-path="regression-kriging.html"><a href="regression-kriging.html#stepwise-variable-selection"><i class="fa fa-check"></i><b>6.3</b> stepwise variable selection</a></li>
+<li class="chapter" data-level="6.4" data-path="regression-kriging.html"><a href="regression-kriging.html#model-validation-graphical-diagnosis-of-the-regression-analysis"><i class="fa fa-check"></i><b>6.4</b> Model Validation: graphical diagnosis of the regression analysis</a></li>
+<li class="chapter" data-level="6.5" data-path="regression-kriging.html"><a href="regression-kriging.html#prediction-and-residual-kriging"><i class="fa fa-check"></i><b>6.5</b> Prediction and residual kriging</a></li>
+<li class="chapter" data-level="6.6" data-path="regression-kriging.html"><a href="regression-kriging.html#cross-validation-of-regression-kriging-models"><i class="fa fa-check"></i><b>6.6</b> Cross-validation of regression-kriging models</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="random-forest.html"><a href="random-forest.html"><i class="fa fa-check"></i><b>7</b> Random-Forest</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="random-forest.html"><a href="random-forest.html#modeling-approach-1"><i class="fa fa-check"></i><b>7.1</b> Modeling Approach</a></li>
+<li class="chapter" data-level="7.2" data-path="random-forest.html"><a href="random-forest.html#data-preparation-1"><i class="fa fa-check"></i><b>7.2</b> Data preparation</a></li>
+<li class="chapter" data-level="7.3" data-path="random-forest.html"><a href="random-forest.html#define-a-model-formula"><i class="fa fa-check"></i><b>7.3</b> define a model formula</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="random-forest.html"><a href="random-forest.html#number-of-predictors-used"><i class="fa fa-check"></i><b>7.3.1</b> Number of predictors used</a></li>
+<li class="chapter" data-level="7.3.2" data-path="random-forest.html"><a href="random-forest.html#check-if-the-error-stabilizes"><i class="fa fa-check"></i><b>7.3.2</b> Check if the error stabilizes</a></li>
+<li class="chapter" data-level="7.3.3" data-path="random-forest.html"><a href="random-forest.html#make-a-prediction-across-all-nj"><i class="fa fa-check"></i><b>7.3.3</b> Make a prediction across all NJ</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="random-forest.html"><a href="random-forest.html#using-modified-maps-to-show-the-spatial-distribution-of-the-soc-stocks-across-nj"><i class="fa fa-check"></i><b>7.4</b> Using modified Maps to show the Spatial distribution of the SOC stocks across NJ</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="random-forest.html"><a href="random-forest.html#tmap"><i class="fa fa-check"></i><b>7.4.1</b> tMap</a></li>
+<li class="chapter" data-level="7.4.2" data-path="random-forest.html"><a href="random-forest.html#tmap-view-mode"><i class="fa fa-check"></i><b>7.4.2</b> tMap view mode</a></li>
+<li class="chapter" data-level="7.4.3" data-path="random-forest.html"><a href="random-forest.html#with-the-sampling-location"><i class="fa fa-check"></i><b>7.4.3</b> With the sampling location</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="random-forest.html"><a href="random-forest.html#using-ggplot2"><i class="fa fa-check"></i><b>7.5</b> Using GGPLOT2</a></li>
+<li class="chapter" data-level="7.6" data-path="random-forest.html"><a href="random-forest.html#with-modified-color-pallett"><i class="fa fa-check"></i><b>7.6</b> With modified color pallett</a></li>
+<li class="chapter" data-level="7.7" data-path="random-forest.html"><a href="random-forest.html#using-quantile-regression-forest-to-estimate-uncertainty"><i class="fa fa-check"></i><b>7.7</b> Using quantile regression forest to estimate uncertainty</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="support-vector-machines-model.html"><a href="support-vector-machines-model.html"><i class="fa fa-check"></i><b>8</b> Support Vector Machines Model</a></li>
+<li class="chapter" data-level="9" data-path="model-evaluation.html"><a href="model-evaluation.html"><i class="fa fa-check"></i><b>9</b> Model evaluation</a></li>
+<li class="chapter" data-level="10" data-path="rothc-model.html"><a href="rothc-model.html"><i class="fa fa-check"></i><b>10</b> RothC model</a></li>
+<li class="divider"></li>
+<li><a href="#top">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="geo-matching-the-dataset" class="section level1 hasAnchor" number="5">
+<h1><span class="header-section-number">Chapter 5</span> Geo-matching the Dataset<a href="geo-matching-the-dataset.html#geo-matching-the-dataset" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="technical-steps---geo-matching-and-rasterize-in-r" class="section level2 hasAnchor" number="5.1">
+<h2><span class="header-section-number">5.1</span> Technical steps - Geo-matching and Rasterize in R<a href="geo-matching-the-dataset.html#technical-steps---geo-matching-and-rasterize-in-r" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Step 1 - Load the soil data and soil map for NJ</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="geo-matching-the-dataset.html#cb1-1" tabindex="-1"></a><span class="co"># Generate NJ shapefile &#39;.shp&#39; file using the tigris pakage</span></span>
+<span id="cb1-2"><a href="geo-matching-the-dataset.html#cb1-2" tabindex="-1"></a><span class="fu">library</span>(tigris)</span>
+<span id="cb1-3"><a href="geo-matching-the-dataset.html#cb1-3" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tigris_use_cache =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-4"><a href="geo-matching-the-dataset.html#cb1-4" tabindex="-1"></a><span class="fu">library</span>(rgdal)</span>
+<span id="cb1-5"><a href="geo-matching-the-dataset.html#cb1-5" tabindex="-1"></a><span class="fu">library</span>(raster) </span>
+<span id="cb1-6"><a href="geo-matching-the-dataset.html#cb1-6" tabindex="-1"></a><span class="fu">library</span>(sp)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="geo-matching-the-dataset.html#cb2-1" tabindex="-1"></a>nj.shp <span class="ot">&lt;-</span> <span class="fu">counties</span>(<span class="at">state =</span> <span class="st">&#39;NJ&#39;</span>, <span class="at">cb =</span> <span class="cn">TRUE</span>, <span class="at">resolution =</span> <span class="st">&#39;20m&#39;</span>) </span>
+<span id="cb2-2"><a href="geo-matching-the-dataset.html#cb2-2" tabindex="-1"></a><span class="co"># Get the geometry</span></span>
+<span id="cb2-3"><a href="geo-matching-the-dataset.html#cb2-3" tabindex="-1"></a>nj.shp<span class="sc">$</span>geometry</span></code></pre></div>
+<pre><code>## Geometry set for 21 features 
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -75.55945 ymin: 38.92852 xmax: -73.89398 ymax: 41.35742
+## Geodetic CRS:  NAD83
+## First 5 geometries:</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="geo-matching-the-dataset.html#cb4-1" tabindex="-1"></a><span class="fu">plot</span>(nj.shp<span class="sc">$</span>geometry)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/setup-1.png" width="672" /></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="geo-matching-the-dataset.html#cb5-1" tabindex="-1"></a><span class="co"># Save the geodata as .SHP</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="geo-matching-the-dataset.html#cb6-1" tabindex="-1"></a><span class="co"># CHANGE SHAPEFILE PROJECTION</span></span>
+<span id="cb6-2"><a href="geo-matching-the-dataset.html#cb6-2" tabindex="-1"></a>nj.shp <span class="ot">&lt;-</span> <span class="fu">spTransform</span>(nj.shp, <span class="fu">CRS</span>(<span class="st">&quot;+proj=longlat +datum=WGS84&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="geo-matching-the-dataset.html#cb7-1" tabindex="-1"></a><span class="co"># Convert the SOC data in nj.Data to log10()</span></span>
+<span id="cb7-2"><a href="geo-matching-the-dataset.html#cb7-2" tabindex="-1"></a>nj.Data<span class="sc">$</span>OCSKGM <span class="ot">&lt;-</span> <span class="fu">log</span>(nj.Data<span class="sc">$</span>SOC)</span>
+<span id="cb7-3"><a href="geo-matching-the-dataset.html#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="geo-matching-the-dataset.html#cb7-4" tabindex="-1"></a><span class="co"># Promote to SpatialPointsDataFrame</span></span>
+<span id="cb7-5"><a href="geo-matching-the-dataset.html#cb7-5" tabindex="-1"></a><span class="fu">coordinates</span>(nj.Data) <span class="ot">&lt;-</span> <span class="er">~</span> X <span class="sc">+</span> Y</span>
+<span id="cb7-6"><a href="geo-matching-the-dataset.html#cb7-6" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="geo-matching-the-dataset.html#cb7-7" tabindex="-1"></a><span class="co"># Project the Data created in Chapter 3 to the Shapefile</span></span>
+<span id="cb7-8"><a href="geo-matching-the-dataset.html#cb7-8" tabindex="-1"></a>nj.Data<span class="sc">@</span>proj4string <span class="ot">&lt;-</span> nj.shp<span class="sc">@</span>proj4string</span></code></pre></div>
+</div>
+<div id="step-2---adding-raster-soilmap-to-the-raster-stack" class="section level2 hasAnchor" number="5.2">
+<h2><span class="header-section-number">5.2</span> Step 2 - Adding raster soilmap to the raster stack<a href="geo-matching-the-dataset.html#step-2---adding-raster-soilmap-to-the-raster-stack" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="geo-matching-the-dataset.html#cb8-1" tabindex="-1"></a>covs <span class="ot">&lt;-</span> <span class="fu">stack</span>(files)</span></code></pre></div>
+</div>
+<div id="step-3---geo-matching" class="section level2 hasAnchor" number="5.3">
+<h2><span class="header-section-number">5.3</span> Step 3 - Geo-matching<a href="geo-matching-the-dataset.html#step-3---geo-matching" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="geo-matching-the-dataset.html#cb9-1" tabindex="-1"></a>nj.shp<span class="sc">$</span>OCSKGM <span class="ot">&lt;-</span> <span class="fu">over</span>(nj.shp, nj.Data[,<span class="st">&quot;OCSKGM&quot;</span>], <span class="at">fun=</span>mean)[,<span class="dv">1</span>]</span></code></pre></div>
+</div>
+<div id="step-4---rasterize-and-export-the-results-as-geotiff" class="section level2 hasAnchor" number="5.4">
+<h2><span class="header-section-number">5.4</span> Step 4 - Rasterize and export the results as geotiff<a href="geo-matching-the-dataset.html#step-4---rasterize-and-export-the-results-as-geotiff" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="geo-matching-the-dataset.html#cb10-1" tabindex="-1"></a><span class="co"># Convert the layer to raster, to comply with the deliverables specifications.</span></span>
+<span id="cb10-2"><a href="geo-matching-the-dataset.html#cb10-2" tabindex="-1"></a>pred.nj <span class="ot">&lt;-</span> <span class="fu">rasterize</span>(nj.shp, covs, <span class="st">&quot;OCSKGM&quot;</span>)</span>
+<span id="cb10-3"><a href="geo-matching-the-dataset.html#cb10-3" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="geo-matching-the-dataset.html#cb10-4" tabindex="-1"></a><span class="fu">plot</span>(pred.nj)</span>
+<span id="cb10-5"><a href="geo-matching-the-dataset.html#cb10-5" tabindex="-1"></a><span class="fu">lines</span>(nj.shp, <span class="at">lwd=</span><span class="fl">0.3</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="geo-matching-the-dataset.html#cb11-1" tabindex="-1"></a><span class="co"># extract values from covariates to the soil points</span></span>
+<span id="cb11-2"><a href="geo-matching-the-dataset.html#cb11-2" tabindex="-1"></a>nj.SOC <span class="ot">&lt;-</span> <span class="fu">extract</span>(<span class="at">x =</span> covs, <span class="at">y =</span> nj.Data, <span class="at">sp =</span> <span class="cn">TRUE</span>) </span>
+<span id="cb11-3"><a href="geo-matching-the-dataset.html#cb11-3" tabindex="-1"></a><span class="fu">summary</span>(nj.SOC<span class="sc">@</span>data)</span></code></pre></div>
+<pre><code>##       X.1              id                 SOC              CRFVOL       
+##  Min.   :  1.00   Length:188         Min.   :  22.96   Min.   : 0.0000  
+##  1st Qu.: 47.75   Class :character   1st Qu.: 142.07   1st Qu.: 0.0000  
+##  Median : 94.50   Mode  :character   Median : 299.02   Median : 0.6363  
+##  Mean   : 94.50                      Mean   : 437.62   Mean   : 3.5593  
+##  3rd Qu.:141.25                      3rd Qu.: 770.85   3rd Qu.: 2.7634  
+##  Max.   :188.00                      Max.   :1000.00   Max.   :45.6198  
+##      OCSKGM        annualPET      aridityIndexThornthwaite
+##  Min.   :3.134   Min.   : 759.3   Min.   : 8.372          
+##  1st Qu.:4.956   1st Qu.: 883.1   1st Qu.:14.620          
+##  Median :5.700   Median : 933.8   Median :17.407          
+##  Mean   :5.669   Mean   : 928.1   Mean   :17.426          
+##  3rd Qu.:6.647   3rd Qu.: 995.1   3rd Qu.:19.996          
+##  Max.   :6.908   Max.   :1032.5   Max.   :28.434          
+##  climaticMoistureIndex continentality    embergerQ     growingDegDays0
+##  Min.   :0.01279       Min.   :21.88   Min.   :104.9   Min.   :4379   
+##  1st Qu.:0.15834       1st Qu.:22.96   1st Qu.:126.0   1st Qu.:5115   
+##  Median :0.19868       Median :23.57   Median :130.8   Median :5393   
+##  Mean   :0.20279       Mean   :23.68   Mean   :131.5   Mean   :5300   
+##  3rd Qu.:0.24609       3rd Qu.:24.67   3rd Qu.:134.8   3rd Qu.:5507   
+##  Max.   :0.34004       Max.   :25.17   Max.   :158.4   Max.   :5653   
+##  growingDegDays5 maxTempColdest  meanTempColdest  meanTempWarmest
+##  Min.   :2934    Min.   :3.450   Min.   :-0.425   Min.   :24.48  
+##  1st Qu.:3462    1st Qu.:5.650   1st Qu.: 1.900   1st Qu.:26.39  
+##  Median :3631    Median :6.688   Median : 3.400   Median :26.61  
+##  Mean   :3587    Mean   :6.270   Mean   : 2.871   Mean   :26.55  
+##  3rd Qu.:3737    3rd Qu.:7.000   3rd Qu.: 3.800   3rd Qu.:26.96  
+##  Max.   :3873    Max.   :7.275   Max.   : 4.575   Max.   :27.75  
+##  minTempWarmest  monthCountByTemp10 PETColdestQuarter PETDriestQuarter
+##  Min.   :19.67   Min.   :7.000      Min.   :22.56     Min.   :25.87   
+##  1st Qu.:21.83   1st Qu.:7.000      1st Qu.:25.41     1st Qu.:37.27   
+##  Median :23.20   Median :8.000      Median :25.81     Median :57.12   
+##  Mean   :22.71   Mean   :7.739      Mean   :25.84     Mean   :51.05   
+##  3rd Qu.:23.48   3rd Qu.:8.000      3rd Qu.:26.52     3rd Qu.:63.02   
+##  Max.   :24.20   Max.   :8.000      Max.   :28.34     Max.   :69.67   
+##  PETseasonality PETWarmestQuarter PETWettestQuarter thermicityIndex
+##  Min.   :3265   Min.   :104.3     Min.   : 69.0     Min.   :184.4  
+##  1st Qu.:4097   1st Qu.:125.7     1st Qu.:119.5     1st Qu.:245.2  
+##  Median :4497   Median :134.8     Median :131.3     Median :263.1  
+##  Mean   :4518   Mean   :134.6     Mean   :126.3     Mean   :257.2  
+##  3rd Qu.:5073   3rd Qu.:147.2     3rd Qu.:144.5     3rd Qu.:271.8  
+##  Max.   :5257   Max.   :150.8     Max.   :148.4     Max.   :287.0  
+##    annualPET      aridityIndexThornthwaite climaticMoistureIndex
+##  Min.   : 759.3   Min.   : 8.372           Min.   :0.01279      
+##  1st Qu.: 883.1   1st Qu.:14.620           1st Qu.:0.15834      
+##  Median : 933.8   Median :17.407           Median :0.19868      
+##  Mean   : 928.1   Mean   :17.426           Mean   :0.20279      
+##  3rd Qu.: 995.1   3rd Qu.:19.996           3rd Qu.:0.24609      
+##  Max.   :1032.5   Max.   :28.434           Max.   :0.34004      
+##  continentality    embergerQ     growingDegDays0 growingDegDays5
+##  Min.   :21.88   Min.   :104.9   Min.   :4379    Min.   :2934   
+##  1st Qu.:22.96   1st Qu.:126.0   1st Qu.:5115    1st Qu.:3462   
+##  Median :23.57   Median :130.8   Median :5393    Median :3631   
+##  Mean   :23.68   Mean   :131.5   Mean   :5300    Mean   :3587   
+##  3rd Qu.:24.67   3rd Qu.:134.8   3rd Qu.:5507    3rd Qu.:3737   
+##  Max.   :25.17   Max.   :158.4   Max.   :5653    Max.   :3873   
+##  maxTempColdest  meanTempColdest  meanTempWarmest minTempWarmest 
+##  Min.   :3.450   Min.   :-0.425   Min.   :24.48   Min.   :19.67  
+##  1st Qu.:5.650   1st Qu.: 1.900   1st Qu.:26.39   1st Qu.:21.83  
+##  Median :6.688   Median : 3.400   Median :26.61   Median :23.20  
+##  Mean   :6.270   Mean   : 2.871   Mean   :26.55   Mean   :22.71  
+##  3rd Qu.:7.000   3rd Qu.: 3.800   3rd Qu.:26.96   3rd Qu.:23.48  
+##  Max.   :7.275   Max.   : 4.575   Max.   :27.75   Max.   :24.20  
+##  monthCountByTemp10 PETColdestQuarter PETDriestQuarter PETseasonality
+##  Min.   :7.000      Min.   :22.56     Min.   :25.87    Min.   :3265  
+##  1st Qu.:7.000      1st Qu.:25.41     1st Qu.:37.27    1st Qu.:4097  
+##  Median :8.000      Median :25.81     Median :57.12    Median :4497  
+##  Mean   :7.739      Mean   :25.84     Mean   :51.05    Mean   :4518  
+##  3rd Qu.:8.000      3rd Qu.:26.52     3rd Qu.:63.02    3rd Qu.:5073  
+##  Max.   :8.000      Max.   :28.34     Max.   :69.67    Max.   :5257  
+##  PETWarmestQuarter PETWettestQuarter thermicityIndex
+##  Min.   :104.3     Min.   : 69.0     Min.   :184.4  
+##  1st Qu.:125.7     1st Qu.:119.5     1st Qu.:245.2  
+##  Median :134.8     Median :131.3     Median :263.1  
+##  Mean   :134.6     Mean   :126.3     Mean   :257.2  
+##  3rd Qu.:147.2     3rd Qu.:144.5     3rd Qu.:271.8  
+##  Max.   :150.8     Max.   :148.4     Max.   :287.0</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="geo-matching-the-dataset.html#cb13-1" tabindex="-1"></a><span class="co"># The points with NA values have to be removed </span></span>
+<span id="cb13-2"><a href="geo-matching-the-dataset.html#cb13-2" tabindex="-1"></a><span class="co"># nj.SOC = nj.SOC[complete.cases(nj.SOC), ]</span></span>
+<span id="cb13-3"><a href="geo-matching-the-dataset.html#cb13-3" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="geo-matching-the-dataset.html#cb13-4" tabindex="-1"></a><span class="co"># Export as a *.csv table</span></span>
+<span id="cb13-5"><a href="geo-matching-the-dataset.html#cb13-5" tabindex="-1"></a><span class="fu">write.csv</span>(nj.SOC, <span class="st">&quot;saveLocation&quot;</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="co-variates-and-raster-files.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="regression-kriging.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/edit/main/05-Geo-matching.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/blob/main/05-Geo-matching.Rmd",
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

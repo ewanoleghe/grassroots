@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 7 Random-Forest | MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ</title>
+  <meta name="description" content="Chapter 7 Random-Forest | MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ" />
+  <meta name="generator" content="bookdown 0.34 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 7 Random-Forest | MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 7 Random-Forest | MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ" />
+  
+  
+  
+
+<meta name="author" content="EWAN OLEGHE" />
+
+
+<meta name="date" content="2023-07-09" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="regression-kriging.html"/>
+<link rel="next" href="support-vector-machines-model.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.1.1/leaflet.js"></script>
+<script src="libs/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
+<script src="libs/leaflet-providers-plugin-2.1.1/leaflet-providers-plugin.js"></script>
+<script src="libs/leaflet-graticule-0.1.0/L.Graticule.js"></script>
+<script src="libs/leaflet-graticule-0.1.0/Graticule-binding.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">NJ SOC MAPPING</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> NJ SOC MAPPING</a></li>
+<li class="chapter" data-level="2" data-path="introduction.html"><a href="introduction.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="introduction.html"><a href="introduction.html#modeling-approach"><i class="fa fa-check"></i><b>2.1</b> Modeling Approach</a></li>
+<li class="chapter" data-level="2.2" data-path="introduction.html"><a href="introduction.html#study-area"><i class="fa fa-check"></i><b>2.2</b> Study Area</a></li>
+<li class="chapter" data-level="2.3" data-path="introduction.html"><a href="introduction.html#big-geo-data"><i class="fa fa-check"></i><b>2.3</b> Big Geo Data</a></li>
+<li class="chapter" data-level="2.4" data-path="introduction.html"><a href="introduction.html#calculations"><i class="fa fa-check"></i><b>2.4</b> Calculations</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="soil-data.html"><a href="soil-data.html"><i class="fa fa-check"></i><b>3</b> Soil Data</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="soil-data.html"><a href="soil-data.html#soil-organic-carbon-soc-ground-measurements"><i class="fa fa-check"></i><b>3.1</b> Soil organic carbon (SOC) ground measurements</a></li>
+<li class="chapter" data-level="3.2" data-path="soil-data.html"><a href="soil-data.html#some-libraries"><i class="fa fa-check"></i><b>3.2</b> Some Libraries</a></li>
+<li class="chapter" data-level="3.3" data-path="soil-data.html"><a href="soil-data.html#input-data-in-r"><i class="fa fa-check"></i><b>3.3</b> Input data in R</a></li>
+<li class="chapter" data-level="3.4" data-path="soil-data.html"><a href="soil-data.html#create-the-soc-data"><i class="fa fa-check"></i><b>3.4</b> Create the SOC data</a></li>
+<li class="chapter" data-level="3.5" data-path="soil-data.html"><a href="soil-data.html#working-data"><i class="fa fa-check"></i><b>3.5</b> Working Data</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="co-variates-and-raster-files.html"><a href="co-variates-and-raster-files.html"><i class="fa fa-check"></i><b>4</b> Co-Variates and Raster Files</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="co-variates-and-raster-files.html"><a href="co-variates-and-raster-files.html#chelsa-global-downscaled-climate-data-set"><i class="fa fa-check"></i><b>4.1</b> CHELSA global downscaled climate data set</a></li>
+<li class="chapter" data-level="4.2" data-path="co-variates-and-raster-files.html"><a href="co-variates-and-raster-files.html#covariates-plot"><i class="fa fa-check"></i><b>4.2</b> Covariates plot</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html"><i class="fa fa-check"></i><b>5</b> Geo-matching the Dataset</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html#technical-steps---geo-matching-and-rasterize-in-r"><i class="fa fa-check"></i><b>5.1</b> Technical steps - Geo-matching and Rasterize in R</a></li>
+<li class="chapter" data-level="5.2" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html#step-2---adding-raster-soilmap-to-the-raster-stack"><i class="fa fa-check"></i><b>5.2</b> Step 2 - Adding raster soilmap to the raster stack</a></li>
+<li class="chapter" data-level="5.3" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html#step-3---geo-matching"><i class="fa fa-check"></i><b>5.3</b> Step 3 - Geo-matching</a></li>
+<li class="chapter" data-level="5.4" data-path="geo-matching-the-dataset.html"><a href="geo-matching-the-dataset.html#step-4---rasterize-and-export-the-results-as-geotiff"><i class="fa fa-check"></i><b>5.4</b> Step 4 - Rasterize and export the results as geotiff</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="regression-kriging.html"><a href="regression-kriging.html"><i class="fa fa-check"></i><b>6</b> Regression-Kriging</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="regression-kriging.html"><a href="regression-kriging.html#data-preparation"><i class="fa fa-check"></i><b>6.1</b> Data preparation</a></li>
+<li class="chapter" data-level="6.2" data-path="regression-kriging.html"><a href="regression-kriging.html#regression-model"><i class="fa fa-check"></i><b>6.2</b> Regression Model</a></li>
+<li class="chapter" data-level="6.3" data-path="regression-kriging.html"><a href="regression-kriging.html#stepwise-variable-selection"><i class="fa fa-check"></i><b>6.3</b> stepwise variable selection</a></li>
+<li class="chapter" data-level="6.4" data-path="regression-kriging.html"><a href="regression-kriging.html#model-validation-graphical-diagnosis-of-the-regression-analysis"><i class="fa fa-check"></i><b>6.4</b> Model Validation: graphical diagnosis of the regression analysis</a></li>
+<li class="chapter" data-level="6.5" data-path="regression-kriging.html"><a href="regression-kriging.html#prediction-and-residual-kriging"><i class="fa fa-check"></i><b>6.5</b> Prediction and residual kriging</a></li>
+<li class="chapter" data-level="6.6" data-path="regression-kriging.html"><a href="regression-kriging.html#cross-validation-of-regression-kriging-models"><i class="fa fa-check"></i><b>6.6</b> Cross-validation of regression-kriging models</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="random-forest.html"><a href="random-forest.html"><i class="fa fa-check"></i><b>7</b> Random-Forest</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="random-forest.html"><a href="random-forest.html#modeling-approach-1"><i class="fa fa-check"></i><b>7.1</b> Modeling Approach</a></li>
+<li class="chapter" data-level="7.2" data-path="random-forest.html"><a href="random-forest.html#data-preparation-1"><i class="fa fa-check"></i><b>7.2</b> Data preparation</a></li>
+<li class="chapter" data-level="7.3" data-path="random-forest.html"><a href="random-forest.html#define-a-model-formula"><i class="fa fa-check"></i><b>7.3</b> define a model formula</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="random-forest.html"><a href="random-forest.html#number-of-predictors-used"><i class="fa fa-check"></i><b>7.3.1</b> Number of predictors used</a></li>
+<li class="chapter" data-level="7.3.2" data-path="random-forest.html"><a href="random-forest.html#check-if-the-error-stabilizes"><i class="fa fa-check"></i><b>7.3.2</b> Check if the error stabilizes</a></li>
+<li class="chapter" data-level="7.3.3" data-path="random-forest.html"><a href="random-forest.html#make-a-prediction-across-all-nj"><i class="fa fa-check"></i><b>7.3.3</b> Make a prediction across all NJ</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="random-forest.html"><a href="random-forest.html#using-modified-maps-to-show-the-spatial-distribution-of-the-soc-stocks-across-nj"><i class="fa fa-check"></i><b>7.4</b> Using modified Maps to show the Spatial distribution of the SOC stocks across NJ</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="random-forest.html"><a href="random-forest.html#tmap"><i class="fa fa-check"></i><b>7.4.1</b> tMap</a></li>
+<li class="chapter" data-level="7.4.2" data-path="random-forest.html"><a href="random-forest.html#tmap-view-mode"><i class="fa fa-check"></i><b>7.4.2</b> tMap view mode</a></li>
+<li class="chapter" data-level="7.4.3" data-path="random-forest.html"><a href="random-forest.html#with-the-sampling-location"><i class="fa fa-check"></i><b>7.4.3</b> With the sampling location</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="random-forest.html"><a href="random-forest.html#using-ggplot2"><i class="fa fa-check"></i><b>7.5</b> Using GGPLOT2</a></li>
+<li class="chapter" data-level="7.6" data-path="random-forest.html"><a href="random-forest.html#with-modified-color-pallett"><i class="fa fa-check"></i><b>7.6</b> With modified color pallett</a></li>
+<li class="chapter" data-level="7.7" data-path="random-forest.html"><a href="random-forest.html#using-quantile-regression-forest-to-estimate-uncertainty"><i class="fa fa-check"></i><b>7.7</b> Using quantile regression forest to estimate uncertainty</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="support-vector-machines-model.html"><a href="support-vector-machines-model.html"><i class="fa fa-check"></i><b>8</b> Support Vector Machines Model</a></li>
+<li class="chapter" data-level="9" data-path="model-evaluation.html"><a href="model-evaluation.html"><i class="fa fa-check"></i><b>9</b> Model evaluation</a></li>
+<li class="chapter" data-level="10" data-path="rothc-model.html"><a href="rothc-model.html"><i class="fa fa-check"></i><b>10</b> RothC model</a></li>
+<li class="divider"></li>
+<li><a href="#top">Published with bookdown</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">MACHINE LEARNING FOR MODELING SOC STOCKS IN NJ</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="random-forest" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">Chapter 7</span> Random-Forest<a href="random-forest.html#random-forest" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="modeling-approach-1" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> Modeling Approach<a href="random-forest.html#modeling-approach-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Random forest is a machine learning algorithm method that is popular in DSM for uncovering the statistical relationship between a dependent variable (e.g., soil carbon stocks) and its predictors (covariates or independent variables). RF has proven to be efficient at mapping soil properties across a wide range of data scenarios and scales of soil variability. This Chapter is devoted to machine learning algorithm applied to SOC mapping using the Rapid Carbon Assessment Project (RCAP) dataset for New Jersey.</p>
+</div>
+<div id="data-preparation-1" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> Data preparation<a href="random-forest.html#data-preparation-1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>We previously prepared the point dataset “nj.SOC” in chapter 5. We will be using this data file in this section.</p>
+<p>Environmental predictors (covariates).<br>
+In the Chapter 4, we presented and prepared several global and climatic datasets. In addition to these datasets, numerous covariate layers have been prepared</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="cb1-1"><a href="random-forest.html#cb1-1" tabindex="-1"></a></span>
+<span id="cb1-2"><a href="random-forest.html#cb1-2" tabindex="-1"></a><span class="in">```{r setup, include=FALSE}</span></span>
+<span id="cb1-3"><a href="random-forest.html#cb1-3" tabindex="-1"></a><span class="in"># explore the data structure</span></span>
+<span id="cb1-4"><a href="random-forest.html#cb1-4" tabindex="-1"></a><span class="in">nj.SOC &lt;- read.csv(&quot;C/../LOCATION/File_Name.csv&quot;)</span></span>
+<span id="cb1-5"><a href="random-forest.html#cb1-5" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="random-forest.html#cb1-6" tabindex="-1"></a><span class="in"># Read in covariates</span></span>
+<span id="cb1-7"><a href="random-forest.html#cb1-7" tabindex="-1"></a><span class="in">files &lt;- list.files(Directory, pattern = &#39;.tif$&#39;, full.names = TRUE)</span></span>
+<span id="cb1-8"><a href="random-forest.html#cb1-8" tabindex="-1"></a><span class="in">covs &lt;- stack(files)</span></span>
+<span id="cb1-9"><a href="random-forest.html#cb1-9" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="random-forest.html#cb2-1" tabindex="-1"></a><span class="co"># Explore the data structure</span></span>
+<span id="cb2-2"><a href="random-forest.html#cb2-2" tabindex="-1"></a><span class="fu">str</span>(nj.SOC)</span></code></pre></div>
+<pre><code>## &#39;data.frame&#39;:    188 obs. of  26 variables:
+##  $ X.1                     : int  1 2 3 4 5 6 7 8 9 10 ...
+##  $ id                      : chr  &quot;C1201C061&quot; &quot;C1201C062&quot; &quot;C1201C063&quot; &quot;C1201C064&quot; ...
+##  $ X                       : num  -75 -75 -75 -75 -75 ...
+##  $ Y                       : num  41 41 41 41 41 ...
+##  $ SOC                     : num  90 58.4 39.7 67.2 55.3 ...
+##  $ CRFVOL                  : num  9.34 3.97 4.84 6.97 5.97 ...
+##  $ OCSKGM                  : num  4.5 4.07 3.68 4.21 4.01 ...
+##  $ annualPET               : num  1009 1009 1009 1009 1009 ...
+##  $ aridityIndexThornthwaite: num  28.4 28.4 28.4 28.4 28.4 ...
+##  $ climaticMoistureIndex   : num  0.0128 0.0128 0.0128 0.0128 0.0128 ...
+##  $ continentality          : num  25.2 25.2 25.2 25.2 25.2 ...
+##  $ embergerQ               : num  105 105 105 105 105 ...
+##  $ growingDegDays0         : num  5011 5011 5011 5011 5011 ...
+##  $ growingDegDays5         : num  3409 3409 3409 3409 3409 ...
+##  $ maxTempColdest          : num  5.07 5.07 5.07 5.07 5.07 ...
+##  $ meanTempColdest         : num  1.2 1.2 1.2 1.2 1.2 ...
+##  $ meanTempWarmest         : num  26.4 26.4 26.4 26.4 26.4 ...
+##  $ minTempWarmest          : num  21.5 21.5 21.5 21.5 21.5 ...
+##  $ monthCountByTemp10      : int  7 7 7 7 7 7 7 7 7 7 ...
+##  $ PETColdestQuarter       : num  24.9 24.9 24.9 24.9 24.9 ...
+##  $ PETDriestQuarter        : num  36.8 36.8 36.8 36.8 36.8 ...
+##  $ PETseasonality          : num  5257 5257 5257 5257 5257 ...
+##  $ PETWarmestQuarter       : num  151 151 151 151 151 ...
+##  $ PETWettestQuarter       : num  148 148 148 148 148 ...
+##  $ thermicityIndex         : num  238 238 238 238 238 ...
+##  $ optional                : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="random-forest.html#cb4-1" tabindex="-1"></a><span class="co"># Promote to spatialPointsDataFrame</span></span>
+<span id="cb4-2"><a href="random-forest.html#cb4-2" tabindex="-1"></a><span class="fu">coordinates</span>(nj.SOC) <span class="ot">&lt;-</span> <span class="er">~</span> X <span class="sc">+</span> Y</span>
+<span id="cb4-3"><a href="random-forest.html#cb4-3" tabindex="-1"></a><span class="fu">class</span>(nj.SOC)</span></code></pre></div>
+<pre><code>## [1] &quot;SpatialPointsDataFrame&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;sp&quot;</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="random-forest.html#cb6-1" tabindex="-1"></a>nj.SOC<span class="sc">@</span>proj4string <span class="ot">&lt;-</span> <span class="fu">CRS</span>(<span class="at">projargs =</span> <span class="st">&quot;+proj=longlat +datum=WGS84&quot;</span>)</span>
+<span id="cb6-2"><a href="random-forest.html#cb6-2" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="random-forest.html#cb6-3" tabindex="-1"></a><span class="co"># Get the covariates names</span></span>
+<span id="cb6-4"><a href="random-forest.html#cb6-4" tabindex="-1"></a><span class="fu">library</span>(raster)</span>
+<span id="cb6-5"><a href="random-forest.html#cb6-5" tabindex="-1"></a>covs <span class="ot">&lt;-</span> <span class="fu">stack</span>(files)</span>
+<span id="cb6-6"><a href="random-forest.html#cb6-6" tabindex="-1"></a><span class="fu">names</span>(covs)  </span></code></pre></div>
+<pre><code>##  [1] &quot;annualPET&quot;                &quot;aridityIndexThornthwaite&quot;
+##  [3] &quot;climaticMoistureIndex&quot;    &quot;continentality&quot;          
+##  [5] &quot;embergerQ&quot;                &quot;growingDegDays0&quot;         
+##  [7] &quot;growingDegDays5&quot;          &quot;maxTempColdest&quot;          
+##  [9] &quot;meanTempColdest&quot;          &quot;meanTempWarmest&quot;         
+## [11] &quot;minTempWarmest&quot;           &quot;monthCountByTemp10&quot;      
+## [13] &quot;PETColdestQuarter&quot;        &quot;PETDriestQuarter&quot;        
+## [15] &quot;PETseasonality&quot;           &quot;PETWarmestQuarter&quot;       
+## [17] &quot;PETWettestQuarter&quot;        &quot;thermicityIndex&quot;</code></pre>
+</div>
+<div id="define-a-model-formula" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> define a model formula<a href="random-forest.html#define-a-model-formula" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="random-forest.html#cb8-1" tabindex="-1"></a>fm <span class="ot">=</span> <span class="fu">as.formula</span>(<span class="fu">paste</span>(<span class="st">&quot;OCSKGM ~&quot;</span>, <span class="fu">paste0</span>(<span class="fu">names</span>(covs), <span class="at">collapse =</span> <span class="st">&quot;+&quot;</span>))) </span>
+<span id="cb8-2"><a href="random-forest.html#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="random-forest.html#cb8-3" tabindex="-1"></a><span class="co"># Default 10-fold cross-validation</span></span>
+<span id="cb8-4"><a href="random-forest.html#cb8-4" tabindex="-1"></a>ctrl <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(<span class="at">method =</span> <span class="st">&quot;cv&quot;</span>, <span class="at">savePred=</span>T) </span>
+<span id="cb8-5"><a href="random-forest.html#cb8-5" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="random-forest.html#cb8-6" tabindex="-1"></a><span class="co"># Run the model</span></span>
+<span id="cb8-7"><a href="random-forest.html#cb8-7" tabindex="-1"></a>rfmodel <span class="ot">&lt;-</span> <span class="fu">train</span>(fm, <span class="at">data =</span> nj.SOC<span class="sc">@</span>data, <span class="at">method =</span> <span class="st">&quot;rf&quot;</span>, <span class="at">trControl =</span> ctrl, <span class="at">importance=</span><span class="cn">TRUE</span>) </span></code></pre></div>
+<div id="number-of-predictors-used" class="section level3 hasAnchor" number="7.3.1">
+<h3><span class="header-section-number">7.3.1</span> Number of predictors used<a href="random-forest.html#number-of-predictors-used" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="random-forest.html#cb9-1" tabindex="-1"></a><span class="fu">plot</span>(rfmodel)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="random-forest.html#cb10-1" tabindex="-1"></a><span class="fu">varImpPlot</span>((rfmodel[<span class="dv">11</span>][[<span class="dv">1</span>]]), <span class="at">pch =</span><span class="dv">19</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="check-if-the-error-stabilizes" class="section level3 hasAnchor" number="7.3.2">
+<h3><span class="header-section-number">7.3.2</span> Check if the error stabilizes<a href="random-forest.html#check-if-the-error-stabilizes" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="random-forest.html#cb11-1" tabindex="-1"></a><span class="fu">plot</span>(rfmodel[<span class="dv">11</span>][[<span class="dv">1</span>]])</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="make-a-prediction-across-all-nj" class="section level3 hasAnchor" number="7.3.3">
+<h3><span class="header-section-number">7.3.3</span> Make a prediction across all NJ<a href="random-forest.html#make-a-prediction-across-all-nj" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="random-forest.html#cb12-1" tabindex="-1"></a><span class="co">#Note that the units are still in log</span></span>
+<span id="cb12-2"><a href="random-forest.html#cb12-2" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">predict</span>(covs, rfmodel)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="random-forest.html#cb13-1" tabindex="-1"></a><span class="co"># Back transform predictions log transformed</span></span>
+<span id="cb13-2"><a href="random-forest.html#cb13-2" tabindex="-1"></a>pred <span class="ot">&lt;-</span> <span class="fu">exp</span>(pred)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="random-forest.html#cb14-1" tabindex="-1"></a><span class="co"># Save the result as a tiff file</span></span>
+<span id="cb14-2"><a href="random-forest.html#cb14-2" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="random-forest.html#cb14-3" tabindex="-1"></a><span class="co"># View the prediction map</span></span>
+<span id="cb14-4"><a href="random-forest.html#cb14-4" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#D92121&quot;</span>, <span class="st">&quot;#FF9933&quot;</span>,<span class="st">&quot;#00FF00&quot;</span> ,<span class="st">&quot;#003300&quot;</span>, <span class="st">&quot;#0000FF&quot;</span> ) </span>
+<span id="cb14-5"><a href="random-forest.html#cb14-5" tabindex="-1"></a><span class="fu">plot</span>(pred, <span class="at">main =</span> <span class="st">&quot;NJ Soc Stocks&quot;</span>, <span class="at">col =</span> (p1), <span class="at">na.value =</span> <span class="st">&quot;grey99&quot;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+Spatial distribution of the SOC stocks across NJ</p>
+<p><br>
+<br></p>
+</div>
+</div>
+<div id="using-modified-maps-to-show-the-spatial-distribution-of-the-soc-stocks-across-nj" class="section level2 hasAnchor" number="7.4">
+<h2><span class="header-section-number">7.4</span> Using modified Maps to show the Spatial distribution of the SOC stocks across NJ<a href="random-forest.html#using-modified-maps-to-show-the-spatial-distribution-of-the-soc-stocks-across-nj" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="tmap" class="section level3 hasAnchor" number="7.4.1">
+<h3><span class="header-section-number">7.4.1</span> tMap<a href="random-forest.html#tmap" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="random-forest.html#cb15-1" tabindex="-1"></a>  <span class="fu">tm_shape</span>(pred) <span class="sc">+</span> <span class="fu">tm_raster</span>(<span class="at">palette =</span> <span class="fu">hcl.colors</span>(<span class="dv">20</span>, <span class="st">&quot;RdYlGn&quot;</span>), <span class="at">title=</span><span class="st">&quot;NJ SOC stocks (t/ha)&quot;</span>, </span>
+<span id="cb15-2"><a href="random-forest.html#cb15-2" tabindex="-1"></a>            <span class="at">legend.hist =</span> <span class="cn">TRUE</span>, <span class="at">legend.hist.title =</span> <span class="st">&quot;Distribution of colors across pixels&quot;</span>)  <span class="sc">+</span> </span>
+<span id="cb15-3"><a href="random-forest.html#cb15-3" tabindex="-1"></a>  <span class="fu">tm_legend</span>(<span class="at">outside =</span> <span class="cn">TRUE</span>, <span class="at">hist.width =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">tm_compass</span>(<span class="at">position =</span> <span class="fu">c</span>(<span class="st">&quot;left&quot;</span>, <span class="st">&quot;bottom&quot;</span>)) <span class="sc">+</span> </span>
+<span id="cb15-4"><a href="random-forest.html#cb15-4" tabindex="-1"></a>  <span class="fu">tm_scale_bar</span>(<span class="at">position =</span> <span class="fu">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;bottom&quot;</span>), <span class="at">width =</span> <span class="cn">NA</span>) <span class="sc">+</span> <span class="fu">tm_graticules</span>(<span class="at">col =</span> <span class="st">&quot;black&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb15-5"><a href="random-forest.html#cb15-5" tabindex="-1"></a>  <span class="fu">tm_xlab</span>(<span class="st">&quot;X&quot;</span>) <span class="sc">+</span> <span class="fu">tm_ylab</span>(<span class="st">&quot;Y&quot;</span>) <span class="sc">+</span><span class="co"># tm_shape(dat) + tm_dots(size=0.2) + </span></span>
+<span id="cb15-6"><a href="random-forest.html#cb15-6" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">frame.lwd =</span> <span class="dv">3</span>, <span class="at">main.title =</span> <span class="st">&quot;NJ SOC stocks&quot;</span>, <span class="at">title.size =</span> <span class="fl">1.5</span>, </span>
+<span id="cb15-7"><a href="random-forest.html#cb15-7" tabindex="-1"></a>            <span class="at">title.position =</span> <span class="fu">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;top&quot;</span>), <span class="at">legend.outside=</span><span class="cn">TRUE</span>, </span>
+<span id="cb15-8"><a href="random-forest.html#cb15-8" tabindex="-1"></a>            <span class="at">legend.title.size =</span> <span class="dv">1</span>,<span class="at">legend.text.size =</span> <span class="dv">1</span>) </span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div id="tmap-view-mode" class="section level3 hasAnchor" number="7.4.2">
+<h3><span class="header-section-number">7.4.2</span> tMap view mode<a href="random-forest.html#tmap-view-mode" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="random-forest.html#cb16-1" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">&quot;view&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="random-forest.html#cb17-1" tabindex="-1"></a><span class="fu">tm_shape</span>(pred) <span class="sc">+</span> <span class="fu">tm_raster</span>(<span class="at">palette =</span> <span class="fu">hcl.colors</span>(<span class="dv">20</span>, <span class="st">&quot;RdYlGn&quot;</span>), <span class="at">style =</span> <span class="st">&quot;cont&quot;</span>, </span>
+<span id="cb17-2"><a href="random-forest.html#cb17-2" tabindex="-1"></a>            <span class="at">title =</span> <span class="st">&quot;Mean SOC stocks (t/ha)&quot;</span>) <span class="sc">+</span> <span class="fu">tm_layout</span>(<span class="at">legend.position =</span> <span class="fu">c</span>(<span class="st">&quot;left&quot;</span>, <span class="st">&quot;top&quot;</span>), </span>
+<span id="cb17-3"><a href="random-forest.html#cb17-3" tabindex="-1"></a>            <span class="at">legend.title.size =</span> <span class="dv">1</span>, <span class="at">legend.text.size =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">tm_scale_bar</span>() <span class="sc">+</span> </span>
+<span id="cb17-4"><a href="random-forest.html#cb17-4" tabindex="-1"></a>  <span class="fu">tm_compass</span>(<span class="at">position =</span> <span class="fu">c</span>(<span class="st">&quot;left&quot;</span>, <span class="st">&quot;bottom&quot;</span>)) <span class="sc">+</span> <span class="fu">tm_graticules</span>() </span></code></pre></div>
+<div id="htmlwidget-ad9106f000b78e20fbd7" style="width:672px;height:480px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ad9106f000b78e20fbd7">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"createMapPane","args":["tmap401",401]},{"method":"createMapPane","args":["tmap402",402]},{"method":"addProviderTiles","args":["Esri.WorldGrayCanvas",null,"Esri.WorldGrayCanvas",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["OpenStreetMap",null,"OpenStreetMap",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"pane":"tilePane"}]},{"method":"addProviderTiles","args":["Esri.WorldTopoMap",null,"Esri.WorldTopoMap",{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"pane":"tilePane"}]},{"method":"addRasterImage","args":["data:image/png;base64,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",[[41.3611996801238,-75.55847263995],[38.9130934783085,-73.8808119785136]],1,null,"tmap401","pred"]},{"method":"addLegend","args":[{"colors":["#E47000 , #E47000 0%, #EFA247 16.6666666666667%, #F4D27C 33.3333333333333%, #E6DD84 50%, #D6E78C 66.6666666666667%, #A0C967 83.3333333333333%, #6AAB42 100%, #6AAB42 "],"labels":["200","300","400","500","600","700","800"],"na_color":null,"na_label":null,"opacity":1,"position":"topright","type":"numeric","title":"Mean SOC stocks (t/ha)","extra":{"p_1":0,"p_n":1},"layerId":"legend401","className":"info legend pred","group":"pred"}]},{"method":"addGraticule","args":[20,false,{"color":"#333","weight":1},null,null,{"interactive":true,"className":"","pane":"tmap402"}]},{"method":"addLayersControl","args":[["Esri.WorldGrayCanvas","OpenStreetMap","Esri.WorldTopoMap"],"pred",{"collapsed":true,"autoZIndex":true,"position":"topleft"}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":false,"updateWhenIdle":true,"position":"bottomright"}]}],"limits":{"lat":[38.9130934783085,41.3611996801238],"lng":[-75.55847263995,-73.8808119785136]},"fitBounds":[38.92486059545,-75.55847263995,41.35819391905,-73.89180597995,[]]},"evals":[],"jsHooks":[]}</script>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="random-forest.html#cb18-1" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">&quot;plot&quot;</span>)</span></code></pre></div>
+</div>
+<div id="with-the-sampling-location" class="section level3 hasAnchor" number="7.4.3">
+<h3><span class="header-section-number">7.4.3</span> With the sampling location<a href="random-forest.html#with-the-sampling-location" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="random-forest.html#cb19-1" tabindex="-1"></a><span class="fu">tm_shape</span>(pred) <span class="sc">+</span> <span class="fu">tm_raster</span>(<span class="at">palette =</span> <span class="fu">hcl.colors</span>(<span class="dv">20</span>, <span class="st">&quot;RdYlGn&quot;</span>), <span class="at">title=</span><span class="st">&quot;NJ SOC stocks (t/ha)&quot;</span>, </span>
+<span id="cb19-2"><a href="random-forest.html#cb19-2" tabindex="-1"></a>            <span class="at">legend.hist =</span> <span class="cn">TRUE</span>, <span class="at">legend.hist.title =</span> <span class="st">&quot;Distribution of colors across pixels&quot;</span>)  <span class="sc">+</span> </span>
+<span id="cb19-3"><a href="random-forest.html#cb19-3" tabindex="-1"></a>  <span class="fu">tm_legend</span>(<span class="at">outside =</span> <span class="cn">TRUE</span>, <span class="at">hist.width =</span> <span class="dv">1</span>) <span class="sc">+</span> <span class="fu">tm_compass</span>(<span class="at">position =</span> <span class="fu">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;top&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb19-4"><a href="random-forest.html#cb19-4" tabindex="-1"></a>  <span class="fu">tm_scale_bar</span>(<span class="at">position =</span> <span class="fu">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;bottom&quot;</span>), <span class="at">width =</span> <span class="cn">NA</span>) <span class="sc">+</span> </span>
+<span id="cb19-5"><a href="random-forest.html#cb19-5" tabindex="-1"></a>  <span class="fu">tm_graticules</span>(<span class="at">col =</span> <span class="st">&quot;black&quot;</span>) <span class="sc">+</span> <span class="fu">tm_xlab</span>(<span class="st">&quot;X&quot;</span>) <span class="sc">+</span> <span class="fu">tm_ylab</span>(<span class="st">&quot;Y&quot;</span>) <span class="sc">+</span> <span class="fu">tm_shape</span>(nj.SOC) <span class="sc">+</span> <span class="fu">tm_dots</span>(<span class="at">size=</span><span class="fl">0.2</span>) <span class="sc">+</span> </span>
+<span id="cb19-6"><a href="random-forest.html#cb19-6" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">frame.lwd =</span> <span class="dv">3</span>, <span class="at">main.title =</span> <span class="st">&quot;NJ SOC stocks&quot;</span>, <span class="at">title.size =</span> <span class="fl">1.5</span>, </span>
+<span id="cb19-7"><a href="random-forest.html#cb19-7" tabindex="-1"></a>            <span class="at">title.position =</span> <span class="fu">c</span>(<span class="st">&quot;right&quot;</span>, <span class="st">&quot;top&quot;</span>), <span class="at">legend.outside=</span><span class="cn">TRUE</span>, </span>
+<span id="cb19-8"><a href="random-forest.html#cb19-8" tabindex="-1"></a>            <span class="at">legend.title.size =</span> <span class="dv">1</span>, <span class="at">legend.text.size =</span> <span class="dv">1</span>) </span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+</div>
+</div>
+<div id="using-ggplot2" class="section level2 hasAnchor" number="7.5">
+<h2><span class="header-section-number">7.5</span> Using GGPLOT2<a href="random-forest.html#using-ggplot2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="random-forest.html#cb20-1" tabindex="-1"></a><span class="co"># Convert to data frame for plotting</span></span>
+<span id="cb20-2"><a href="random-forest.html#cb20-2" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(<span class="fu">as</span>(pred, <span class="st">&#39;SpatialPixelsDataFrame&#39;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="random-forest.html#cb21-1" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_raster</span>(<span class="at">data =</span> data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> layer)) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb21-2"><a href="random-forest.html#cb21-2" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">TRUE</span>, <span class="at">crs =</span> <span class="dv">4326</span>, <span class="at">label_graticule =</span> <span class="st">&#39;NW&#39;</span>)  <span class="sc">+</span> </span>
+<span id="cb21-3"><a href="random-forest.html#cb21-3" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">type =</span> <span class="st">&quot;seq&quot;</span>, <span class="at">palette =</span> <span class="st">&quot;RdYlBu&quot;</span>, <span class="at">na.value =</span> <span class="st">&quot;grey99&quot;</span>, <span class="at">name =</span> <span class="st">&quot;NJ SOC (t/ha)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="random-forest.html#cb21-4" tabindex="-1"></a>  ggspatial<span class="sc">::</span><span class="fu">annotation_scale</span>(<span class="at">width_hint =</span> <span class="fl">0.5</span>, <span class="at">location =</span> <span class="st">&quot;br&quot;</span>) <span class="sc">+</span></span>
+<span id="cb21-5"><a href="random-forest.html#cb21-5" tabindex="-1"></a>  ggspatial<span class="sc">::</span><span class="fu">annotation_north_arrow</span>(<span class="at">which_north =</span> <span class="st">&quot;true&quot;</span>, <span class="at">location =</span> <span class="st">&quot;br&quot;</span>, </span>
+<span id="cb21-6"><a href="random-forest.html#cb21-6" tabindex="-1"></a>  <span class="at">height =</span> <span class="fu">unit</span>(.<span class="dv">8</span>, <span class="st">&quot;cm&quot;</span>), <span class="at">width =</span> <span class="fu">unit</span>(.<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>), </span>
+<span id="cb21-7"><a href="random-forest.html#cb21-7" tabindex="-1"></a>  <span class="at">pad_x =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">&quot;cm&quot;</span>), <span class="at">pad_y =</span> <span class="fu">unit</span>(<span class="fl">0.8</span>, <span class="st">&quot;cm&quot;</span>), </span>
+<span id="cb21-8"><a href="random-forest.html#cb21-8" tabindex="-1"></a>  <span class="at">style =</span> <span class="fu">north_arrow_orienteering</span>(<span class="at">text_size =</span> <span class="dv">10</span>))</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+</div>
+<div id="with-modified-color-pallett" class="section level2 hasAnchor" number="7.6">
+<h2><span class="header-section-number">7.6</span> With modified color pallett<a href="random-forest.html#with-modified-color-pallett" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="random-forest.html#cb22-1" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span> <span class="fu">geom_raster</span>(<span class="at">data =</span> data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> layer)) <span class="sc">+</span> <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb22-2"><a href="random-forest.html#cb22-2" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.ontop=</span><span class="cn">TRUE</span>, <span class="at">panel.background=</span><span class="fu">element_blank</span>(), <span class="at">panel.grid.major =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>))<span class="sc">+</span> </span>
+<span id="cb22-3"><a href="random-forest.html#cb22-3" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">TRUE</span>, <span class="at">crs =</span> <span class="dv">4326</span>, <span class="at">label_graticule =</span> <span class="st">&#39;NW&#39;</span>)  <span class="sc">+</span> </span>
+<span id="cb22-4"><a href="random-forest.html#cb22-4" tabindex="-1"></a>  <span class="fu">scale_fill_gradientn</span>(<span class="at">colors =</span> <span class="fu">hcl.colors</span>(<span class="dv">20</span>, <span class="st">&quot;RdYlGn&quot;</span>), <span class="at">name =</span> <span class="st">&quot;NJ SOC (t/ha)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb22-5"><a href="random-forest.html#cb22-5" tabindex="-1"></a>  ggspatial<span class="sc">::</span><span class="fu">annotation_scale</span>(<span class="at">width_hint =</span> <span class="fl">0.5</span>, <span class="at">location =</span> <span class="st">&quot;br&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb22-6"><a href="random-forest.html#cb22-6" tabindex="-1"></a>  ggspatial<span class="sc">::</span><span class="fu">annotation_north_arrow</span>(<span class="at">which_north =</span> <span class="st">&quot;true&quot;</span>, </span>
+<span id="cb22-7"><a href="random-forest.html#cb22-7" tabindex="-1"></a>  <span class="at">location =</span> <span class="st">&quot;br&quot;</span>, <span class="at">height =</span> <span class="fu">unit</span>(.<span class="dv">8</span>, <span class="st">&quot;cm&quot;</span>), <span class="at">width =</span> <span class="fu">unit</span>(.<span class="dv">3</span>, <span class="st">&quot;cm&quot;</span>), </span>
+<span id="cb22-8"><a href="random-forest.html#cb22-8" tabindex="-1"></a>  <span class="at">pad_x =</span> <span class="fu">unit</span>(<span class="fl">0.5</span>, <span class="st">&quot;cm&quot;</span>), <span class="at">pad_y =</span> <span class="fu">unit</span>(<span class="fl">0.8</span>, <span class="st">&quot;cm&quot;</span>), <span class="at">style =</span> <span class="fu">north_arrow_orienteering</span>(<span class="at">text_size =</span> <span class="dv">10</span>))</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><br>
+<br>
+<br></p>
+</div>
+<div id="using-quantile-regression-forest-to-estimate-uncertainty" class="section level2 hasAnchor" number="7.7">
+<h2><span class="header-section-number">7.7</span> Using quantile regression forest to estimate uncertainty<a href="random-forest.html#using-quantile-regression-forest-to-estimate-uncertainty" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="random-forest.html#cb23-1" tabindex="-1"></a><span class="co"># Generate an empty dataframe</span></span>
+<span id="cb23-2"><a href="random-forest.html#cb23-2" tabindex="-1"></a>validation <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">rmse=</span><span class="fu">numeric</span>(), <span class="at">r2=</span><span class="fu">numeric</span>())</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="random-forest.html#cb24-1" tabindex="-1"></a><span class="co"># Sensitivity to the dataset</span></span>
+<span id="cb24-2"><a href="random-forest.html#cb24-2" tabindex="-1"></a><span class="co"># Start a loop with 10 model realizations</span></span>
+<span id="cb24-3"><a href="random-forest.html#cb24-3" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>){</span>
+<span id="cb24-4"><a href="random-forest.html#cb24-4" tabindex="-1"></a>  <span class="co"># We will build 10 models using random samples of 25%  </span></span>
+<span id="cb24-5"><a href="random-forest.html#cb24-5" tabindex="-1"></a>  smp_size <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fl">0.25</span> <span class="sc">*</span> <span class="fu">nrow</span>(nj.SOC))</span>
+<span id="cb24-6"><a href="random-forest.html#cb24-6" tabindex="-1"></a>  train_ind <span class="ot">&lt;-</span> <span class="fu">sample</span>(<span class="fu">seq_len</span>(<span class="fu">nrow</span>(nj.SOC)), <span class="at">size =</span> smp_size)</span>
+<span id="cb24-7"><a href="random-forest.html#cb24-7" tabindex="-1"></a>  train <span class="ot">&lt;-</span> nj.SOC[train_ind, ]</span>
+<span id="cb24-8"><a href="random-forest.html#cb24-8" tabindex="-1"></a>  test <span class="ot">&lt;-</span> nj.SOC[<span class="sc">-</span>train_ind, ]</span>
+<span id="cb24-9"><a href="random-forest.html#cb24-9" tabindex="-1"></a>  modn <span class="ot">&lt;-</span> <span class="fu">train</span>(fm, <span class="at">data=</span>train<span class="sc">@</span>data, <span class="at">method =</span> <span class="st">&quot;rf&quot;</span>, </span>
+<span id="cb24-10"><a href="random-forest.html#cb24-10" tabindex="-1"></a>                <span class="at">trControl =</span> ctrl)</span>
+<span id="cb24-11"><a href="random-forest.html#cb24-11" tabindex="-1"></a>  pred <span class="ot">&lt;-</span> <span class="fu">stack</span>(pred, <span class="fu">predict</span>(covs, modn))</span>
+<span id="cb24-12"><a href="random-forest.html#cb24-12" tabindex="-1"></a>  test<span class="sc">$</span>pred <span class="ot">&lt;-</span> <span class="fu">extract</span>(pred[[i<span class="sc">+</span><span class="dv">1</span>]], test)</span>
+<span id="cb24-13"><a href="random-forest.html#cb24-13" tabindex="-1"></a>  <span class="co"># Store the results in a dataframe</span></span>
+<span id="cb24-14"><a href="random-forest.html#cb24-14" tabindex="-1"></a>  validation[i, <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">rmse</span>(test<span class="sc">$</span>OCSKGM, test<span class="sc">$</span>pred)</span>
+<span id="cb24-15"><a href="random-forest.html#cb24-15" tabindex="-1"></a>  validation[i, <span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">cor</span>(test<span class="sc">$</span>OCSKGM, test<span class="sc">$</span>pred)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb24-16"><a href="random-forest.html#cb24-16" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="random-forest.html#cb25-1" tabindex="-1"></a><span class="co">#The sensitivity map is the dispersion of all individual models</span></span>
+<span id="cb25-2"><a href="random-forest.html#cb25-2" tabindex="-1"></a>sensitivity <span class="ot">&lt;-</span> <span class="fu">calc</span>(pred[[<span class="sc">-</span><span class="dv">1</span>]], sd)</span>
+<span id="cb25-3"><a href="random-forest.html#cb25-3" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="random-forest.html#cb25-4" tabindex="-1"></a><span class="fu">plot</span>(sensitivity, <span class="at">col=</span><span class="fu">rev</span>(<span class="fu">topo.colors</span>(<span class="dv">10</span>)), <span class="at">main=</span><span class="st">&#39;Sensitivity based on 10 realizations using 25% samples&#39;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="random-forest.html#cb26-1" tabindex="-1"></a><span class="co">#Sensitivity of validation metrics</span></span>
+<span id="cb26-2"><a href="random-forest.html#cb26-2" tabindex="-1"></a><span class="fu">summary</span>(validation)</span></code></pre></div>
+<pre><code>##       rmse              r2        
+##  Min.   :0.6345   Min.   :0.1832  
+##  1st Qu.:0.6790   1st Qu.:0.4183  
+##  Median :0.7401   Median :0.4851  
+##  Mean   :0.7504   Mean   :0.4589  
+##  3rd Qu.:0.7996   3rd Qu.:0.5236  
+##  Max.   :0.9463   Max.   :0.6244</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="random-forest.html#cb28-1" tabindex="-1"></a><span class="co"># Plot of the map based on 75% of data and the sensitivity to data</span></span>
+<span id="cb28-2"><a href="random-forest.html#cb28-2" tabindex="-1"></a><span class="co"># variations</span></span>
+<span id="cb28-3"><a href="random-forest.html#cb28-3" tabindex="-1"></a>prediction75 <span class="ot">&lt;-</span> <span class="fu">exp</span>(pred[[<span class="dv">1</span>]])</span>
+<span id="cb28-4"><a href="random-forest.html#cb28-4" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="random-forest.html#cb28-5" tabindex="-1"></a><span class="fu">plot</span>(prediction75, <span class="at">main=</span><span class="st">&#39;NJ OCSKGM prediction based on 75% of data&#39;</span>, <span class="at">col=</span><span class="fu">rev</span>(<span class="fu">topo.colors</span>(<span class="dv">10</span>)))</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="random-forest.html#cb29-1" tabindex="-1"></a><span class="co"># Train the model with  500 trees</span></span>
+<span id="cb29-2"><a href="random-forest.html#cb29-2" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">quantregForest</span>(<span class="at">y=</span><span class="fu">log</span>(nj.SOC<span class="sc">@</span>data<span class="sc">$</span>OCSKGM), <span class="at">x=</span>nj.SOC<span class="sc">@</span>data[,<span class="dv">8</span><span class="sc">:</span><span class="dv">20</span>], <span class="at">ntree=</span><span class="dv">500</span>,</span>
+<span id="cb29-3"><a href="random-forest.html#cb29-3" tabindex="-1"></a>          <span class="at">keep.inbag=</span><span class="cn">TRUE</span>, <span class="at">mtry =</span> <span class="fu">as.numeric</span>(modn<span class="sc">$</span>bestTune))</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="random-forest.html#cb30-1" tabindex="-1"></a><span class="co"># Estimate model uncertainty at the pixel level using parallel computing</span></span>
+<span id="cb30-2"><a href="random-forest.html#cb30-2" tabindex="-1"></a><span class="fu">beginCluster</span>() <span class="co">#define number of cores to use</span></span>
+<span id="cb30-3"><a href="random-forest.html#cb30-3" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="random-forest.html#cb30-4" tabindex="-1"></a><span class="co"># Estimate model uncertainty</span></span>
+<span id="cb30-5"><a href="random-forest.html#cb30-5" tabindex="-1"></a>unc <span class="ot">&lt;-</span> <span class="fu">clusterR</span>(covs, predict, <span class="at">args=</span><span class="fu">list</span>(<span class="at">model=</span>model,<span class="at">what=</span>sd))</span>
+<span id="cb30-6"><a href="random-forest.html#cb30-6" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="random-forest.html#cb30-7" tabindex="-1"></a><span class="co"># OCSKGMlog prediction based in all available data</span></span>
+<span id="cb30-8"><a href="random-forest.html#cb30-8" tabindex="-1"></a>mean <span class="ot">&lt;-</span> <span class="fu">clusterR</span>(covs, predict, <span class="at">args=</span><span class="fu">list</span>(<span class="at">model=</span>model, <span class="at">what=</span>mean))</span>
+<span id="cb30-9"><a href="random-forest.html#cb30-9" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="random-forest.html#cb30-10" tabindex="-1"></a><span class="co"># The total uncertainty is the sum of sensitivity and model uncertainty</span></span>
+<span id="cb30-11"><a href="random-forest.html#cb30-11" tabindex="-1"></a>unc <span class="ot">&lt;-</span> unc <span class="sc">+</span> sensitivity</span>
+<span id="cb30-12"><a href="random-forest.html#cb30-12" tabindex="-1"></a></span>
+<span id="cb30-13"><a href="random-forest.html#cb30-13" tabindex="-1"></a><span class="co"># Express the uncertainty in percent (divide by the mean)</span></span>
+<span id="cb30-14"><a href="random-forest.html#cb30-14" tabindex="-1"></a>Total_unc_Percent <span class="ot">&lt;-</span> <span class="fu">exp</span>(unc)<span class="sc">/</span><span class="fu">exp</span>(mean)</span>
+<span id="cb30-15"><a href="random-forest.html#cb30-15" tabindex="-1"></a></span>
+<span id="cb30-16"><a href="random-forest.html#cb30-16" tabindex="-1"></a><span class="fu">endCluster</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="random-forest.html#cb31-1" tabindex="-1"></a><span class="co"># Plot both maps (the predicted OCSKGM + its associated uncertainty)</span></span>
+<span id="cb31-2"><a href="random-forest.html#cb31-2" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">exp</span>(mean), <span class="at">main=</span><span class="st">&#39;NJ OCSKGM based in all data&#39;</span>, <span class="at">col=</span><span class="fu">rev</span>(<span class="fu">topo.colors</span>(<span class="dv">10</span>)))</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="random-forest.html#cb32-1" tabindex="-1"></a><span class="fu">plot</span>(Total_unc_Percent, <span class="at">col=</span><span class="fu">rev</span>(<span class="fu">heat.colors</span>(<span class="dv">100</span>)), <span class="at">zlim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="at">main=</span><span class="st">&#39;Total uncertainty&#39;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="random-forest.html#cb33-1" tabindex="-1"></a><span class="fu">plot</span>(Total_unc_Percent, <span class="at">col=</span><span class="fu">rev</span>(<span class="fu">heat.colors</span>(<span class="dv">100</span>)), <span class="at">zlim=</span><span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>), <span class="at">main=</span><span class="st">&#39;Total uncertainty&#39;</span>)</span></code></pre></div>
+<p><img src="bookdownproj_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="regression-kriging.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="support-vector-machines-model.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/edit/main/07-Random-Forest.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": "https://github.com/YOUR GITHUB USERNAME/YOUR REPO NAME/blob/main/07-Random-Forest.Rmd",
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
